@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/EngineTypes" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns13="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pfx="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03">
+    <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03" schemaLocation="/SharedResources/ISO20022/Converter/Service/Schema/pain.002.001.03.xsd"/>
+    <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pain.002.001.03" schemaLocation="/SharedResources/Schemas/pain.002.001.03.xsd"/>
+    <pd:name>Implementation/Process/OutgoingResponseFile.process</pd:name>
+    <pd:startName>JMSQReceiver</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="JMSQReceiver">
+        <pd:type>com.tibco.plugin.jms.JMSQueueEventSource</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueEventSource</pd:resourceType>
+        <pd:x>62</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <PermittedMessageType>Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>%%HLIFirmBanking/General/QueueScheduleRes%%</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/SharedResources/Commons/Connections/JMS/JMS-Connection.sharedjmscon</ConnectionReference>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>500</pd:endX>
+    <pd:endY>49</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1648424784555</pd:targetNamespace>
+    <pd:activity name="GetData">
+        <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+        <pd:x>65</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <timeout>%%SharedResources/Connections/JDBC/SQLSRV/jdbc.query.timeout%%</timeout>
+            <commit>false</commit>
+            <maxRows>100</maxRows>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <statement>SELECT message_id, creation_datetime, initiating_party_name, payment_id, payment_method, payment_type_code, execution_date, debtor_name, debtor_address, debtor_postal_code, debtor_country, debtor_IBAN, debtor_account, debtor_agent_BIC, transaction_id, amount, currency, creditor_agent_BIC, creditor_agent_name, creditor_agent_address, creditor_agent_country, creditor_name, creditor_address, creditor_country, creditor_account, transaction_status, transaction_status_desc
+FROM DB_FIRMBANKING.dbo.Tbl_Transaction WHERE message_id = ? ORDER BY transaction_id</statement>
+            <jdbcSharedConfig>/SharedResources/Commons/Connections/JDBC/SQLSRV-JDBC-Connection.sharedjdbc</jdbcSharedConfig>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>message_id</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+            <oraObjects/>
+            <oraTables/>
+            <QueryOutputCachedSchemaColumns>message_id</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creation_datetime</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>initiating_party_name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>payment_id</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>payment_method</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>payment_type_code</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>execution_date</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_address</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_postal_code</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_country</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_IBAN</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_account</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>debtor_agent_BIC</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>transaction_id</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>amount</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>currency</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_agent_BIC</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_agent_name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_agent_address</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_agent_country</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_name</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_address</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_country</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>creditor_account</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>transaction_status</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+            <QueryOutputCachedSchemaColumns>transaction_status_desc</QueryOutputCachedSchemaColumns>
+            <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+            <QueryOutputCachedSchemaDataTypesName>varchar</QueryOutputCachedSchemaDataTypesName>
+            <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+        </config>
+        <pd:inputBindings>
+            <jdbcQueryActivityInput>
+                <message_id>
+                    <xsl:value-of select="$JMSQReceiver/ns:ActivityOutput/Body"/>
+                </message_id>
+            </jdbcQueryActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>2</pd:x>
+        <pd:y>235</pd:y>
+        <pd:width>140</pd:width>
+        <pd:height>140</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>inputLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:over>$GetData/resultSet/Record</pd:over>
+            <pd:iterationElementSlot>data</pd:iterationElementSlot>
+            <pd:indexSlot>i</pd:indexSlot>
+            <pd:outSlot>iterate_output</pd:outSlot>
+            <pd:activityOutputName>MapData</pd:activityOutputName>
+            <pd:accumulateOutput>true</pd:accumulateOutput>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>MapData</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>MapData</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="MapData">
+            <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+            <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+            <pd:x>76</pd:x>
+            <pd:y>317</pd:y>
+            <config>
+                <element>
+                    <xsd:element name="Value">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="messageId" type="xsd:string"/>
+                                <xsd:element name="creationDateTime" type="xsd:string"/>
+                                <xsd:element name="numberOfTrx" type="xsd:string"/>
+                                <xsd:element name="totalTransaction" type="xsd:string"/>
+                                <xsd:element name="initiatingPartyName" type="xsd:string"/>
+                                <xsd:element name="paymentInformation" minOccurs="0" maxOccurs="unbounded">
+                                    <xsd:complexType>
+                                        <xsd:sequence>
+                                            <xsd:element name="paymentId" type="xsd:string" minOccurs="0"/>
+                                            <xsd:element name="paymentMethod" type="xsd:string" minOccurs="0"/>
+                                            <xsd:element name="paymentTypeCode" type="xsd:string" minOccurs="0"/>
+                                            <xsd:element name="paymentGroupStatusReason" type="xsd:string"/>
+                                            <xsd:element name="paymentGroupStatus" type="xsd:string"/>
+                                            <xsd:element name="paymentExecutionDate" type="xsd:string" minOccurs="0"/>
+                                            <xsd:element name="debtorIdentity">
+                                                <xsd:complexType>
+                                                    <xsd:sequence>
+                                                        <xsd:element name="debtorName" type="xsd:string"/>
+                                                        <xsd:element name="debtorAddress" type="xsd:string"/>
+                                                        <xsd:element name="debtorPostalCode" type="xsd:string"/>
+                                                        <xsd:element name="debtorCountry" type="xsd:string"/>
+                                                        <xsd:element name="debtorAccount" type="xsd:string"/>
+                                                        <xsd:element name="debtorIBAN" type="xsd:string"/>
+                                                    </xsd:sequence>
+                                                </xsd:complexType>
+                                            </xsd:element>
+                                            <xsd:element name="debtorAgentBIC" type="xsd:string" minOccurs="0"/>
+                                            <xsd:element name="transactionInformation" minOccurs="0" maxOccurs="unbounded">
+                                                <xsd:complexType>
+                                                    <xsd:sequence>
+                                                        <xsd:element name="transactionId" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="transactionStatus" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="transactionStatusReason" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="amount" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="currency" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAgentBIC" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAgentName" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAgentAddress" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAgentCountry" type="xsd:string"/>
+                                                        <xsd:element name="creditorName" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAddress" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorCountry" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorAccount" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="creditorIBAN" type="xsd:string" minOccurs="0"/>
+                                                        <xsd:element name="information" type="xsd:string" minOccurs="0"/>
+                                                    </xsd:sequence>
+                                                </xsd:complexType>
+                                            </xsd:element>
+                                        </xsd:sequence>
+                                    </xsd:complexType>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </element>
+            </config>
+            <pd:inputBindings>
+                <Value>
+                    <messageId>
+                        <xsl:value-of select="$data/Record/message_id"/>
+                    </messageId>
+                    <creationDateTime>
+                        <xsl:value-of select="$data/Record/creation_datetime"/>
+                    </creationDateTime>
+                    <numberOfTrx>
+                        <xsl:value-of select="$i"/>
+                    </numberOfTrx>
+                    <totalTransaction>
+                        <xsl:value-of select="''"/>
+                    </totalTransaction>
+                    <initiatingPartyName>
+                        <xsl:value-of select="$data/Record/initiating_party_name"/>
+                    </initiatingPartyName>
+                    <paymentInformation>
+                        <paymentId>
+                            <xsl:value-of select="$data/Record/payment_id"/>
+                        </paymentId>
+                        <xsl:if test="$data/Record/payment_method">
+                            <paymentMethod>
+                                <xsl:value-of select="$data/Record/payment_method"/>
+                            </paymentMethod>
+                        </xsl:if>
+                        <xsl:if test="$data/Record/payment_type_code">
+                            <paymentTypeCode>
+                                <xsl:value-of select="$data/Record/payment_type_code"/>
+                            </paymentTypeCode>
+                        </xsl:if>
+                        <paymentGroupStatusReason>
+                            <xsl:value-of select="$data/Record/transaction_status_desc"/>
+                        </paymentGroupStatusReason>
+                        <paymentGroupStatus>
+                            <xsl:value-of select="if ($data/Record/transaction_status = '1') then $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePaySuccess&#xA;else if ($data/Record/transaction_status = '2') then $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePayReject&#xA;else $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePayPending"/>
+                        </paymentGroupStatus>
+                        <debtorIdentity>
+                            <debtorName>
+                                <xsl:value-of select="$data/Record/debtor_name"/>
+                            </debtorName>
+                            <debtorAddress>
+                                <xsl:value-of select="$data/Record/debtor_address"/>
+                            </debtorAddress>
+                            <debtorPostalCode>
+                                <xsl:value-of select="$data/Record/debtor_postal_code"/>
+                            </debtorPostalCode>
+                            <debtorCountry>
+                                <xsl:value-of select="$data/Record/debtor_country"/>
+                            </debtorCountry>
+                            <debtorAccount>
+                                <xsl:value-of select="$data/Record/debtor_account"/>
+                            </debtorAccount>
+                            <debtorIBAN>
+                                <xsl:value-of select="$data/Record/debtor_IBAN"/>
+                            </debtorIBAN>
+                        </debtorIdentity>
+                        <debtorAgentBIC>
+                            <xsl:value-of select="$data/Record/debtor_agent_BIC"/>
+                        </debtorAgentBIC>
+                        <transactionInformation>
+                            <transactionId>
+                                <xsl:value-of select="$data/Record/transaction_id"/>
+                            </transactionId>
+                            <transactionStatus>
+                                <xsl:value-of select="if ($data/Record/transaction_status = '1') then $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePaySuccess&#xA;else if ($data/Record/transaction_status = '2') then $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePayReject&#xA;else $_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePayPending"/>
+                            </transactionStatus>
+                            <xsl:if test="$data/Record/transaction_status_desc">
+                                <transactionStatusReason>
+                                    <xsl:value-of select="$data/Record/transaction_status_desc"/>
+                                </transactionStatusReason>
+                            </xsl:if>
+                            <amount>
+                                <xsl:value-of select="$data/Record/amount"/>
+                            </amount>
+                            <currency>
+                                <xsl:value-of select="$data/Record/currency"/>
+                            </currency>
+                            <creditorAgentBIC>
+                                <xsl:value-of select="$data/Record/creditor_agent_BIC"/>
+                            </creditorAgentBIC>
+                            <xsl:if test="$data/Record/creditor_agent_name">
+                                <creditorAgentName>
+                                    <xsl:value-of select="$data/Record/creditor_agent_name"/>
+                                </creditorAgentName>
+                            </xsl:if>
+                            <xsl:if test="$data/Record/creditor_agent_address">
+                                <creditorAgentAddress>
+                                    <xsl:value-of select="$data/Record/creditor_agent_address"/>
+                                </creditorAgentAddress>
+                            </xsl:if>
+                            <creditorAgentCountry>
+                                <xsl:value-of select="$data/Record/creditor_agent_country"/>
+                            </creditorAgentCountry>
+                            <xsl:if test="$data/Record/creditor_name">
+                                <creditorName>
+                                    <xsl:value-of select="$data/Record/creditor_name"/>
+                                </creditorName>
+                            </xsl:if>
+                            <xsl:if test="$data/Record/creditor_address">
+                                <creditorAddress>
+                                    <xsl:value-of select="$data/Record/creditor_address"/>
+                                </creditorAddress>
+                            </xsl:if>
+                            <xsl:if test="$data/Record/creditor_country">
+                                <creditorCountry>
+                                    <xsl:value-of select="$data/Record/creditor_country"/>
+                                </creditorCountry>
+                            </xsl:if>
+                            <creditorAccount>
+                                <xsl:value-of select="$data/Record/creditor_account"/>
+                            </creditorAccount>
+                            <creditorIBAN>
+                                <xsl:value-of select="''"/>
+                            </creditorIBAN>
+                            <information>
+                                <xsl:value-of select="''"/>
+                            </information>
+                        </transactionInformation>
+                    </paymentInformation>
+                </Value>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:activity name="GetNoUrut">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>204</pd:x>
+        <pd:y>314</pd:y>
+        <config>
+            <processName>/Implementation/Commons/Util/GetNomorUrut.process</processName>
+        </config>
+        <pd:inputBindings>
+            <ServiceName>
+                <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/ServiceName"/>
+            </ServiceName>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="MapGenerate">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>203</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <element>
+                <xsd:element name="Value">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="fileName" type="xsd:string"/>
+                            <xsd:element name="messageId" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <Value>
+                <fileName>
+                    <xsl:value-of select="concat('BBKP', tib:format-dateTime('yyyyMMddHHmmss', current-dateTime()), '-', $GetData/resultSet/Record[1]/message_id, '.BANSTA.XML')"/>
+                </fileName>
+                <messageId>
+                    <xsl:value-of select="concat('MSGKBBKP', tib:format-date('yyyMMdd', current-date()), tib:pad-front($GetNoUrut/NoUrut, 5, '0'))"/>
+                </messageId>
+            </Value>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="MapDataISO">
+        <pd:type>com.tibco.plugin.xml.XMLRendererActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLRendererActivity</pd:resourceType>
+        <pd:x>202</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <renderAsText>text</renderAsText>
+            <validateInput>false</validateInput>
+            <textEncoding>UTF-8</textEncoding>
+            <renderDefaultPrefix>true</renderDefaultPrefix>
+            <term ref="pfx:Document"/>
+        </config>
+        <pd:inputBindings>
+            <pfx:Document>
+                <pfx:CstmrPmtStsRpt>
+                    <pfx:GrpHdr>
+                        <pfx:MsgId>
+                            <xsl:value-of select="$MapGenerate/Value/messageId"/>
+                        </pfx:MsgId>
+                        <pfx:CreDtTm>
+                            <xsl:value-of select="current-dateTime()"/>
+                        </pfx:CreDtTm>
+                        <pfx:InitgPty>
+                            <pfx:Id>
+                                <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$GetNoUrut/NoUrut">
+                                    <pfx:OrgId>
+                                        <pfx:BICOrBEI>
+                                            <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/BankSwiftCode"/>
+                                        </pfx:BICOrBEI>
+                                    </pfx:OrgId>
+                                </xsl:for-each>
+                            </pfx:Id>
+                        </pfx:InitgPty>
+                    </pfx:GrpHdr>
+                    <pfx:OrgnlGrpInfAndSts>
+                        <pfx:OrgnlMsgId>
+                            <xsl:value-of select="$iterate_output/AccumulatedOutput/Value[1]/messageId"/>
+                        </pfx:OrgnlMsgId>
+                        <pfx:OrgnlMsgNmId>
+                            <xsl:value-of select="&quot;pain.001.001.03&quot;"/>
+                        </pfx:OrgnlMsgNmId>
+                        <pfx:OrgnlCreDtTm>
+                            <xsl:value-of select="$iterate_output/AccumulatedOutput/Value[1]/creationDateTime"/>
+                        </pfx:OrgnlCreDtTm>
+                        <pfx:OrgnlNbOfTxs>
+                            <xsl:value-of select="count($iterate_output/AccumulatedOutput/Value/paymentInformation/transactionInformation)"/>
+                        </pfx:OrgnlNbOfTxs>
+                        <pfx:NbOfTxsPerSts>
+                            <pfx:DtldNbOfTxs>
+                                <xsl:value-of select="count($iterate_output/AccumulatedOutput/Value/paymentInformation/transactionInformation)"/>
+                            </pfx:DtldNbOfTxs>
+                            <pfx:DtldSts>
+                                <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/Outgoing/CodePaySuccess"/>
+                            </pfx:DtldSts>
+                        </pfx:NbOfTxsPerSts>
+                    </pfx:OrgnlGrpInfAndSts>
+                    <pfx:OrgnlPmtInfAndSts>
+                        <pfx:OrgnlPmtInfId>
+                            <xsl:value-of select="$GetData/resultSet/Record[1]/payment_id"/>
+                        </pfx:OrgnlPmtInfId>
+                        <xsl:for-each xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="$iterate_output/AccumulatedOutput/Value/paymentInformation/transactionInformation">
+                            <pfx:TxInfAndSts>
+                                <xsl:if test="transactionId">
+                                    <pfx:OrgnlEndToEndId>
+                                        <xsl:value-of select="transactionId"/>
+                                    </pfx:OrgnlEndToEndId>
+                                </xsl:if>
+                                <pfx:TxSts>
+                                    <xsl:value-of select="transactionStatus"/>
+                                </pfx:TxSts>
+                                <pfx:OrgnlTxRef>
+                                    <pfx:Amt>
+                                        <pfx:InstdAmt>
+                                            <xsl:attribute name="Ccy">
+                                                <xsl:value-of select="currency"/>
+                                            </xsl:attribute>
+                                            <xsl:value-of select="amount"/>
+                                        </pfx:InstdAmt>
+                                    </pfx:Amt>
+                                    <xsl:if test="../paymentExecutionDate">
+                                        <pfx:ReqdExctnDt>
+                                            <xsl:value-of select="../paymentExecutionDate"/>
+                                        </pfx:ReqdExctnDt>
+                                    </xsl:if>
+                                    <xsl:if test="../paymentMethod">
+                                        <pfx:PmtMtd>
+                                            <xsl:value-of select="../paymentMethod"/>
+                                        </pfx:PmtMtd>
+                                    </xsl:if>
+                                    <pfx:RmtInf>
+                                        <xsl:if test="transactionId">
+                                            <pfx:Ustrd>
+                                                <xsl:value-of select="transactionId"/>
+                                            </pfx:Ustrd>
+                                        </xsl:if>
+                                    </pfx:RmtInf>
+                                    <pfx:Dbtr>
+                                        <pfx:Nm>
+                                            <xsl:value-of select="../debtorIdentity/debtorName"/>
+                                        </pfx:Nm>
+                                    </pfx:Dbtr>
+                                    <pfx:DbtrAcct>
+                                        <pfx:Id>
+                                            <pfx:Othr>
+                                                <pfx:Id>
+                                                    <xsl:value-of select="../debtorIdentity/debtorAccount"/>
+                                                </pfx:Id>
+                                            </pfx:Othr>
+                                        </pfx:Id>
+                                    </pfx:DbtrAcct>
+                                    <pfx:DbtrAgt>
+                                        <pfx:FinInstnId>
+                                            <pfx:BIC>
+                                                <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/BankSwiftCode"/>
+                                            </pfx:BIC>
+                                            <pfx:ClrSysMmbId>
+                                                <pfx:MmbId>
+                                                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/BankSwiftCode"/>
+                                                </pfx:MmbId>
+                                            </pfx:ClrSysMmbId>
+                                            <pfx:PstlAdr>
+                                                <pfx:Ctry>
+                                                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/BankCountryID"/>
+                                                </pfx:Ctry>
+                                            </pfx:PstlAdr>
+                                        </pfx:FinInstnId>
+                                    </pfx:DbtrAgt>
+                                    <pfx:CdtrAgt>
+                                        <pfx:FinInstnId>
+                                            <xsl:if test="creditorAgentBIC">
+                                                <pfx:BIC>
+                                                    <xsl:value-of select="creditorAgentBIC"/>
+                                                </pfx:BIC>
+                                            </xsl:if>
+                                            <pfx:PstlAdr>
+                                                <pfx:Ctry>
+                                                    <xsl:value-of select="creditorAgentCountry"/>
+                                                </pfx:Ctry>
+                                            </pfx:PstlAdr>
+                                        </pfx:FinInstnId>
+                                        <pfx:BrnchId>
+                                            <xsl:if test="creditorAgentName">
+                                                <pfx:Id>
+                                                    <xsl:value-of select="creditorAgentName"/>
+                                                </pfx:Id>
+                                            </xsl:if>
+                                        </pfx:BrnchId>
+                                    </pfx:CdtrAgt>
+                                    <pfx:Cdtr>
+                                        <xsl:if test="creditorName">
+                                            <pfx:Nm>
+                                                <xsl:value-of select="creditorName"/>
+                                            </pfx:Nm>
+                                        </xsl:if>
+                                    </pfx:Cdtr>
+                                    <pfx:CdtrAcct>
+                                        <pfx:Id>
+                                            <pfx:Othr>
+                                                <pfx:Id>
+                                                    <xsl:value-of select="creditorAccount"/>
+                                                </pfx:Id>
+                                            </pfx:Othr>
+                                        </pfx:Id>
+                                    </pfx:CdtrAcct>
+                                </pfx:OrgnlTxRef>
+                            </pfx:TxInfAndSts>
+                        </xsl:for-each>
+                    </pfx:OrgnlPmtInfAndSts>
+                </pfx:CstmrPmtStsRpt>
+            </pfx:Document>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="WriteFile">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>300</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+        </config>
+        <pd:inputBindings>
+            <ns12:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="concat($_globalVariables/ns1:GlobalVariables/HLIFirmBanking/General/LocalFolderOUT, $MapGenerate/Value/fileName)"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="$MapDataISO/xmlString"/>
+                </textContent>
+            </ns12:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="PutFile">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>303</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <fileName>OutgoingResponseFilePutFile</fileName>
+            <packageName>Implementation.Process.OutgoingResponseFile</packageName>
+            <fullsource>package Implementation.Process.OutgoingResponseFile;
+import java.util.*;
+import java.io.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class OutgoingResponseFilePutFile{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String sftpHost = "";
+	protected int sftpPort = 0;
+	protected String sftpUser = "";
+	protected String remoteDir = "";
+	protected String localFile = "";
+	protected String errMessage = "";
+	public String getsftpHost() {
+		return sftpHost;
+	}
+	public void setsftpHost(String val) {
+		sftpHost = val;
+	}
+	public int getsftpPort() {
+		return sftpPort;
+	}
+	public void setsftpPort(int val) {
+		sftpPort = val;
+	}
+	public String getsftpUser() {
+		return sftpUser;
+	}
+	public void setsftpUser(String val) {
+		sftpUser = val;
+	}
+	public String getremoteDir() {
+		return remoteDir;
+	}
+	public void setremoteDir(String val) {
+		remoteDir = val;
+	}
+	public String getlocalFile() {
+		return localFile;
+	}
+	public void setlocalFile(String val) {
+		localFile = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public OutgoingResponseFilePutFile() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String sftpHost
+	In  : int sftpPort
+	In  : String sftpUser
+	In  : String remoteDir
+	In  : String localFile
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+	try {
+		JSch jSchControl = new JSch();
+
+		Session sessionControl = jSchControl.getSession(sftpUser, sftpHost, sftpPort);
+
+		sessionControl.setPassword(com.tibco.pe.plugin.PluginProperties.getProperty("tibco.clientVar.HLIFirmBanking/SFTP/FileActOUTAtc/Pass"));
+
+		Properties config = new Properties();
+		config.put("StrictHostKeyChecking","no");
+		sessionControl.setConfig(config);
+
+		sessionControl.connect();
+
+		ChannelSftp channelSftpControl = (ChannelSftp) sessionControl.openChannel("sftp");
+		channelSftpControl.connect();
+		channelSftpControl.put(localFile, remoteDir);
+
+		channelSftpControl.disconnect();
+		sessionControl.disconnect();
+	} catch (Exception ex) {
+		
+		    errMessage = ExceptionUtils.getMessage(ex);
+		}
+	}
+}
+</fullsource>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <outputData>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>sftpHost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpPort</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpUser</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>remoteDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>localFile</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>OutgoingResponseFilePutFile</name>
+                    <byteCode>yv66vgAAADMAdQkAHwBDCQAfAEQJAB8ARQkAHwBGCQAfAEcJAB8ASAoAIABJCABKBwBLCgAJAEkKAAkATAgATQoATgBPCgBQAFEHAFIKAA8ASQgAUwgAVAoADwBVCgBQAFYKAFAAVwgAWAoAUABZBwBaCgAYAFcKABgAWwoAGABcCgBQAFwHAF0KAF4AXwcAYAcAYQEACHNmdHBIb3N0AQASTGphdmEvbGFuZy9TdHJpbmc7AQAIc2Z0cFBvcnQBAAFJAQAIc2Z0cFVzZXIBAAlyZW1vdGVEaXIBAAlsb2NhbEZpbGUBAAplcnJNZXNzYWdlAQALZ2V0c2Z0cEhvc3QBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAtzZXRzZnRwSG9zdAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAC2dldHNmdHBQb3J0AQADKClJAQALc2V0c2Z0cFBvcnQBAAQoSSlWAQALZ2V0c2Z0cFVzZXIBAAtzZXRzZnRwVXNlcgEADGdldHJlbW90ZURpcgEADHNldHJlbW90ZURpcgEADGdldGxvY2FsRmlsZQEADHNldGxvY2FsRmlsZQEADWdldGVyck1lc3NhZ2UBAA1zZXRlcnJNZXNzYWdlAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQANU3RhY2tNYXBUYWJsZQcAXQEACkV4Y2VwdGlvbnMBAApTb3VyY2VGaWxlAQAgT3V0Z29pbmdSZXNwb25zZUZpbGVQdXRGaWxlLmphdmEMACEAIgwAIwAkDAAlACIMACYAIgwAJwAiDAAoACIMADsAPAEAAAEAFGNvbS9qY3JhZnQvanNjaC9KU2NoDABiAGMBADZ0aWJjby5jbGllbnRWYXIuSExJRmlybUJhbmtpbmcvU0ZUUC9GaWxlQWN0T1VUQXRjL1Bhc3MHAGQMAGUAZgcAZwwAaAAuAQAUamF2YS91dGlsL1Byb3BlcnRpZXMBABVTdHJpY3RIb3N0S2V5Q2hlY2tpbmcBAAJubwwAaQBqDABrAGwMAG0APAEABHNmdHAMAG4AbwEAG2NvbS9qY3JhZnQvanNjaC9DaGFubmVsU2Z0cAwAaQBwDABxADwBABNqYXZhL2xhbmcvRXhjZXB0aW9uBwByDABzAHQBAEdJbXBsZW1lbnRhdGlvbi9Qcm9jZXNzL091dGdvaW5nUmVzcG9uc2VGaWxlL091dGdvaW5nUmVzcG9uc2VGaWxlUHV0RmlsZQEAEGphdmEvbGFuZy9PYmplY3QBAApnZXRTZXNzaW9uAQBAKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nO0kpTGNvbS9qY3JhZnQvanNjaC9TZXNzaW9uOwEAJGNvbS90aWJjby9wZS9wbHVnaW4vUGx1Z2luUHJvcGVydGllcwEAC2dldFByb3BlcnR5AQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBABdjb20vamNyYWZ0L2pzY2gvU2Vzc2lvbgEAC3NldFBhc3N3b3JkAQADcHV0AQA4KExqYXZhL2xhbmcvT2JqZWN0O0xqYXZhL2xhbmcvT2JqZWN0OylMamF2YS9sYW5nL09iamVjdDsBAAlzZXRDb25maWcBABkoTGphdmEvdXRpbC9Qcm9wZXJ0aWVzOylWAQAHY29ubmVjdAEAC29wZW5DaGFubmVsAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMY29tL2pjcmFmdC9qc2NoL0NoYW5uZWw7AQAnKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAKZGlzY29ubmVjdAEAMW9yZy9hcGFjaGUvY29tbW9ucy9sYW5nMy9leGNlcHRpb24vRXhjZXB0aW9uVXRpbHMBAApnZXRNZXNzYWdlAQApKExqYXZhL2xhbmcvVGhyb3dhYmxlOylMamF2YS9sYW5nL1N0cmluZzsAIQAfACAAAAAGAAQAIQAiAAAABAAjACQAAAAEACUAIgAAAAQAJgAiAAAABAAnACIAAAAEACgAIgAAAA4AAQApACoAAQArAAAAHQABAAEAAAAFKrQAAbAAAAABACwAAAAGAAEAAAARAAEALQAuAAEAKwAAACIAAgACAAAABiortQABsQAAAAEALAAAAAoAAgAAABQABQAVAAEALwAwAAEAKwAAAB0AAQABAAAABSq0AAKsAAAAAQAsAAAABgABAAAAFwABADEAMgABACsAAAAiAAIAAgAAAAYqG7UAArEAAAABACwAAAAKAAIAAAAaAAUAGwABADMAKgABACsAAAAdAAEAAQAAAAUqtAADsAAAAAEALAAAAAYAAQAAAB0AAQA0AC4AAQArAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAsAAAACgACAAAAIAAFACEAAQA1ACoAAQArAAAAHQABAAEAAAAFKrQABLAAAAABACwAAAAGAAEAAAAjAAEANgAuAAEAKwAAACIAAgACAAAABiortQAEsQAAAAEALAAAAAoAAgAAACYABQAnAAEANwAqAAEAKwAAAB0AAQABAAAABSq0AAWwAAAAAQAsAAAABgABAAAAKQABADgALgABACsAAAAiAAIAAgAAAAYqK7UABbEAAAABACwAAAAKAAIAAAAsAAUALQABADkAKgABACsAAAAdAAEAAQAAAAUqtAAGsAAAAAEALAAAAAYAAQAAAC8AAQA6AC4AAQArAAAAIgACAAIAAAAGKiu1AAaxAAAAAQAsAAAACgACAAAAMgAFADMAAQA7ADwAAQArAAAAXAACAAEAAAAoKrcAByoSCLUAASoDtQACKhIItQADKhIItQAEKhIItQAFKhIItQAGsQAAAAEALAAAACIACAAAADUABAAKAAoACwAPAAwAFQANABsADgAhAA8AJwA2AAEAPQA8AAIAKwAAANoABAAFAAAAb7sACVm3AApMKyq0AAMqtAABKrQAArYAC00sEgy4AA22AA67AA9ZtwAQTi0SERIStgATVywttgAULLYAFSwSFrYAF8AAGDoEGQS2ABkZBCq0AAUqtAAEtgAaGQS2ABsstgAcpwAMTCoruAAetQAGsQABAAAAYgBlAB0AAgAsAAAAQgAQAAAAQQAIAEMAGQBFACIARwAqAEgAMwBJADgASwA8AE0ARwBOAEwATwBZAFEAXgBSAGIAVgBlAFMAZgBVAG4AVwA+AAAACQAC9wBlBwA/CABAAAAABAABAB0AAQBBAAAAAgBC</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <sftpHost>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftHost"/>
+                </sftpHost>
+                <sftpPort>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftPort"/>
+                </sftpPort>
+                <sftpUser>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/FileActOUTAtc/User"/>
+                </sftpUser>
+                <remoteDir>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/FileActOUTAtc/Dir"/>
+                </remoteDir>
+                <localFile>
+                    <xsl:value-of select="$WriteFile/ns12:WriteActivityOutputClass/fileInfo/fullName"/>
+                </localFile>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogEND">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>401</pd:x>
+        <pd:y>47</pd:y>
+        <config>
+            <role>Finish</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns13:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('PUT Response File with MessageID ', $JMSQReceiver/ns:ActivityOutput/Body, ' has been ', &#xA;(if (tib:trim($PutFile/javaCodeActivityOutput/errMessage) = '') then $_globalVariables/ns1:GlobalVariables/SharedResources/ResponseCode/SUCCESS &#xA;else $_globalVariables/ns1:GlobalVariables/SharedResources/ResponseCode/FAILED),&#xA;' at ', current-dateTime(), &#xA;(if (tib:trim($PutFile/javaCodeActivityOutput/errMessage) = '') then '' &#xA;else concat(' => ', $PutFile/javaCodeActivityOutput/errMessage)&#xA;)&#xA;)"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="$JMSQReceiver/ns:ActivityOutput/Body"/>
+                </msgCode>
+            </ns13:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="UpdateRes">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>406</pd:x>
+        <pd:y>264</pd:y>
+        <config>
+            <timeout>%%SharedResources/Connections/JDBC/SQLSRV/jdbc.query.timeout%%</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>false</emptyStrAsNil>
+            <jdbcSharedConfig>/SharedResources/Commons/Connections/JDBC/SQLSRV-JDBC-Connection.sharedjdbc</jdbcSharedConfig>
+            <statement>update Tbl_transaction set response_status = ?, response_datetime = ? where message_id = ?</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>status</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>datetime</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>messageId</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <status>
+                    <xsl:value-of select="if (tib:trim($PutFile/javaCodeActivityOutput/errMessage) = '') then '1' else '2'"/>
+                </status>
+                <datetime>
+                    <xsl:value-of select="tib:format-dateTime('yyyyMMddHHmmss', current-dateTime())"/>
+                </datetime>
+                <messageId>
+                    <xsl:value-of select="$JMSQReceiver/ns:ActivityOutput/Body"/>
+                </messageId>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="JMSQSender">
+        <pd:type>com.tibco.plugin.jms.JMSQueueSendActivity</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueSendActivity</pd:resourceType>
+        <pd:x>305</pd:x>
+        <pd:y>264</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>%%HLIFirmBanking/General/QueueFileHeader%%</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/SharedResources/Commons/Connections/JMS/JMS-Connection.sharedjmscon</ConnectionReference>
+            <InDataxsdString>
+                <xsd:element name="JMSData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="MessageID" type="xsd:string"/>
+                            <xsd:element name="OrigMsgID" type="xsd:string"/>
+                            <xsd:element name="FileName" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </InDataxsdString>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <Body>
+                    <JMSData>
+                        <MessageID>
+                            <xsl:value-of select="$MapGenerate/Value/messageId"/>
+                        </MessageID>
+                        <OrigMsgID>
+                            <xsl:value-of select="$JMSQReceiver/ns:ActivityOutput/Body"/>
+                        </OrigMsgID>
+                        <FileName>
+                            <xsl:value-of select="$MapGenerate/Value/fileName"/>
+                        </FileName>
+                    </JMSData>
+                </Body>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogERR">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>497</pd:x>
+        <pd:y>149</pd:y>
+        <config>
+            <role>Failed</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns13:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('PUT Response File with MessageID ', $JMSQReceiver/ns:ActivityOutput/Body, ' has been ', $_globalVariables/ns1:GlobalVariables/SharedResources/Status/ERROR, ' at ', current-dateTime(), ' => ', $_error/ns2:ErrorReport/Msg)"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="$JMSQReceiver/ns:ActivityOutput/Body"/>
+                </msgCode>
+            </ns13:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>496</pd:x>
+        <pd:y>264</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="BakFile">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>402</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <fileName>OutgoingResponseFileBakFile</fileName>
+            <packageName>Implementation.Process.OutgoingResponseFile</packageName>
+            <fullsource>package Implementation.Process.OutgoingResponseFile;
+import java.util.*;
+import java.io.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class OutgoingResponseFileBakFile{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String sftpHost = "";
+	protected int sftpPort = 0;
+	protected String sftpUser = "";
+	protected String remoteDir = "";
+	protected String localFile = "";
+	protected String errMessage = "";
+	public String getsftpHost() {
+		return sftpHost;
+	}
+	public void setsftpHost(String val) {
+		sftpHost = val;
+	}
+	public int getsftpPort() {
+		return sftpPort;
+	}
+	public void setsftpPort(int val) {
+		sftpPort = val;
+	}
+	public String getsftpUser() {
+		return sftpUser;
+	}
+	public void setsftpUser(String val) {
+		sftpUser = val;
+	}
+	public String getremoteDir() {
+		return remoteDir;
+	}
+	public void setremoteDir(String val) {
+		remoteDir = val;
+	}
+	public String getlocalFile() {
+		return localFile;
+	}
+	public void setlocalFile(String val) {
+		localFile = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public OutgoingResponseFileBakFile() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String sftpHost
+	In  : int sftpPort
+	In  : String sftpUser
+	In  : String remoteDir
+	In  : String localFile
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+	try {
+		JSch jSchResponseBak = new JSch();
+
+		Session sessionResponseBak = jSchResponseBak.getSession(sftpUser, sftpHost, sftpPort);
+
+		sessionResponseBak.setPassword(com.tibco.pe.plugin.PluginProperties.getProperty("tibco.clientVar.HLIFirmBanking/SFTP/FileActINC/Pass"));
+
+		Properties config = new Properties();
+		config.put("StrictHostKeyChecking","no");
+		sessionResponseBak.setConfig(config);
+
+		sessionResponseBak.connect();
+
+		ChannelSftp channelSftpResponseBak = (ChannelSftp) sessionResponseBak.openChannel("sftp");
+		channelSftpResponseBak.connect();
+		channelSftpResponseBak.put(localFile, remoteDir);
+
+		channelSftpResponseBak.disconnect();
+		sessionResponseBak.disconnect();
+	} catch (Exception ex) {
+		
+		    errMessage = ExceptionUtils.getMessage(ex);
+		}
+	}
+}
+</fullsource>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <outputData>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>sftpHost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpPort</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpUser</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>remoteDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>localFile</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>OutgoingResponseFileBakFile</name>
+                    <byteCode>yv66vgAAADMAdQkAHwBDCQAfAEQJAB8ARQkAHwBGCQAfAEcJAB8ASAoAIABJCABKBwBLCgAJAEkKAAkATAgATQoATgBPCgBQAFEHAFIKAA8ASQgAUwgAVAoADwBVCgBQAFYKAFAAVwgAWAoAUABZBwBaCgAYAFcKABgAWwoAGABcCgBQAFwHAF0KAF4AXwcAYAcAYQEACHNmdHBIb3N0AQASTGphdmEvbGFuZy9TdHJpbmc7AQAIc2Z0cFBvcnQBAAFJAQAIc2Z0cFVzZXIBAAlyZW1vdGVEaXIBAAlsb2NhbEZpbGUBAAplcnJNZXNzYWdlAQALZ2V0c2Z0cEhvc3QBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAtzZXRzZnRwSG9zdAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAC2dldHNmdHBQb3J0AQADKClJAQALc2V0c2Z0cFBvcnQBAAQoSSlWAQALZ2V0c2Z0cFVzZXIBAAtzZXRzZnRwVXNlcgEADGdldHJlbW90ZURpcgEADHNldHJlbW90ZURpcgEADGdldGxvY2FsRmlsZQEADHNldGxvY2FsRmlsZQEADWdldGVyck1lc3NhZ2UBAA1zZXRlcnJNZXNzYWdlAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQANU3RhY2tNYXBUYWJsZQcAXQEACkV4Y2VwdGlvbnMBAApTb3VyY2VGaWxlAQAgT3V0Z29pbmdSZXNwb25zZUZpbGVCYWtGaWxlLmphdmEMACEAIgwAIwAkDAAlACIMACYAIgwAJwAiDAAoACIMADsAPAEAAAEAFGNvbS9qY3JhZnQvanNjaC9KU2NoDABiAGMBADN0aWJjby5jbGllbnRWYXIuSExJRmlybUJhbmtpbmcvU0ZUUC9GaWxlQWN0SU5DL1Bhc3MHAGQMAGUAZgcAZwwAaAAuAQAUamF2YS91dGlsL1Byb3BlcnRpZXMBABVTdHJpY3RIb3N0S2V5Q2hlY2tpbmcBAAJubwwAaQBqDABrAGwMAG0APAEABHNmdHAMAG4AbwEAG2NvbS9qY3JhZnQvanNjaC9DaGFubmVsU2Z0cAwAaQBwDABxADwBABNqYXZhL2xhbmcvRXhjZXB0aW9uBwByDABzAHQBAEdJbXBsZW1lbnRhdGlvbi9Qcm9jZXNzL091dGdvaW5nUmVzcG9uc2VGaWxlL091dGdvaW5nUmVzcG9uc2VGaWxlQmFrRmlsZQEAEGphdmEvbGFuZy9PYmplY3QBAApnZXRTZXNzaW9uAQBAKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nO0kpTGNvbS9qY3JhZnQvanNjaC9TZXNzaW9uOwEAJGNvbS90aWJjby9wZS9wbHVnaW4vUGx1Z2luUHJvcGVydGllcwEAC2dldFByb3BlcnR5AQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBABdjb20vamNyYWZ0L2pzY2gvU2Vzc2lvbgEAC3NldFBhc3N3b3JkAQADcHV0AQA4KExqYXZhL2xhbmcvT2JqZWN0O0xqYXZhL2xhbmcvT2JqZWN0OylMamF2YS9sYW5nL09iamVjdDsBAAlzZXRDb25maWcBABkoTGphdmEvdXRpbC9Qcm9wZXJ0aWVzOylWAQAHY29ubmVjdAEAC29wZW5DaGFubmVsAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMY29tL2pjcmFmdC9qc2NoL0NoYW5uZWw7AQAnKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAKZGlzY29ubmVjdAEAMW9yZy9hcGFjaGUvY29tbW9ucy9sYW5nMy9leGNlcHRpb24vRXhjZXB0aW9uVXRpbHMBAApnZXRNZXNzYWdlAQApKExqYXZhL2xhbmcvVGhyb3dhYmxlOylMamF2YS9sYW5nL1N0cmluZzsAIQAfACAAAAAGAAQAIQAiAAAABAAjACQAAAAEACUAIgAAAAQAJgAiAAAABAAnACIAAAAEACgAIgAAAA4AAQApACoAAQArAAAAHQABAAEAAAAFKrQAAbAAAAABACwAAAAGAAEAAAARAAEALQAuAAEAKwAAACIAAgACAAAABiortQABsQAAAAEALAAAAAoAAgAAABQABQAVAAEALwAwAAEAKwAAAB0AAQABAAAABSq0AAKsAAAAAQAsAAAABgABAAAAFwABADEAMgABACsAAAAiAAIAAgAAAAYqG7UAArEAAAABACwAAAAKAAIAAAAaAAUAGwABADMAKgABACsAAAAdAAEAAQAAAAUqtAADsAAAAAEALAAAAAYAAQAAAB0AAQA0AC4AAQArAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAsAAAACgACAAAAIAAFACEAAQA1ACoAAQArAAAAHQABAAEAAAAFKrQABLAAAAABACwAAAAGAAEAAAAjAAEANgAuAAEAKwAAACIAAgACAAAABiortQAEsQAAAAEALAAAAAoAAgAAACYABQAnAAEANwAqAAEAKwAAAB0AAQABAAAABSq0AAWwAAAAAQAsAAAABgABAAAAKQABADgALgABACsAAAAiAAIAAgAAAAYqK7UABbEAAAABACwAAAAKAAIAAAAsAAUALQABADkAKgABACsAAAAdAAEAAQAAAAUqtAAGsAAAAAEALAAAAAYAAQAAAC8AAQA6AC4AAQArAAAAIgACAAIAAAAGKiu1AAaxAAAAAQAsAAAACgACAAAAMgAFADMAAQA7ADwAAQArAAAAXAACAAEAAAAoKrcAByoSCLUAASoDtQACKhIItQADKhIItQAEKhIItQAFKhIItQAGsQAAAAEALAAAACIACAAAADUABAAKAAoACwAPAAwAFQANABsADgAhAA8AJwA2AAEAPQA8AAIAKwAAANoABAAFAAAAb7sACVm3AApMKyq0AAMqtAABKrQAArYAC00sEgy4AA22AA67AA9ZtwAQTi0SERIStgATVywttgAULLYAFSwSFrYAF8AAGDoEGQS2ABkZBCq0AAUqtAAEtgAaGQS2ABsstgAcpwAMTCoruAAetQAGsQABAAAAYgBlAB0AAgAsAAAAQgAQAAAAQQAIAEMAGQBFACIARwAqAEgAMwBJADgASwA8AE0ARwBOAEwATwBZAFEAXgBSAGIAVgBlAFMAZgBVAG4AVwA+AAAACQAC9wBlBwA/CABAAAAABAABAB0AAQBBAAAAAgBC</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <sftpHost>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/SFTPBackupHost"/>
+                </sftpHost>
+                <sftpPort>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/SFTPBackupPort"/>
+                </sftpPort>
+                <sftpUser>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/FileActOUTAtc/User"/>
+                </sftpUser>
+                <remoteDir>
+                    <xsl:value-of select="$_globalVariables/ns1:GlobalVariables/HLIFirmBanking/SFTP/FileActOUTAtc/Dir"/>
+                </remoteDir>
+                <localFile>
+                    <xsl:value-of select="$WriteFile/ns12:WriteActivityOutputClass/fileInfo/fullName"/>
+                </localFile>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>JMSQReceiver</pd:from>
+        <pd:to>GetData</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetData</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>GetNoUrut</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetNoUrut</pd:from>
+        <pd:to>MapGenerate</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>MapGenerate</pd:from>
+        <pd:to>MapDataISO</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>MapDataISO</pd:from>
+        <pd:to>WriteFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WriteFile</pd:from>
+        <pd:to>PutFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PutFile</pd:from>
+        <pd:to>JMSQSender</pd:to>
+        <pd:xpathDescription>Success</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16751104</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>tib:trim($PutFile/javaCodeActivityOutput/errMessage) = ''</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PutFile</pd:from>
+        <pd:to>UpdateRes</pd:to>
+        <pd:xpathDescription>Failed</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-6750055</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>UpdateRes</pd:from>
+        <pd:to>BakFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogEND</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JMSQSender</pd:from>
+        <pd:to>UpdateRes</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>LogERR</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogERR</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>BakFile</pd:from>
+        <pd:to>LogEND</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

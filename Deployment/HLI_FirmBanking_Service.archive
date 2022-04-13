@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
+    <enterpriseArchive>
+        <sharedArchive name="Shared Archive">
+            <resourceType>shared.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+        </sharedArchive>
+        <processArchive name="1-GetIncomingFile">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/IncomingGetFileActIN.process,/Implementation/Process/IncomingFileMoving.process</processProperty>
+        </processArchive>
+        <processArchive name="2-ProcessIncomingFile">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/IncomingFileProcess.process</processProperty>
+        </processArchive>
+        <processArchive name="3-GenerateFileControl">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/GenerateFileControl.process</processProperty>
+        </processArchive>
+        <processArchive name="4-GenerateFileHeader">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/GenerateFileHeader.process</processProperty>
+        </processArchive>
+        <processArchive name="5-OutgoingResponseFile">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/OutgoingResSchedule.process,/Implementation/Process/OutgoingResponseFile.process</processProperty>
+        </processArchive>
+        <processArchive name="6-OutgoingCreateMT940">
+            <resourceType>process.archive.resource</resourceType>
+            <authorProperty>Bangun Setiawan</authorProperty>
+            <processProperty>/Implementation/Process/OutgoingCreateMT940.process</processProperty>
+        </processArchive>
+        <versionProperty>1</versionProperty>
+        <authorProperty>Bangun Setiawan</authorProperty>
+        <addServiceSettableGvars>true</addServiceSettableGvars>
+        <name>HLI_FirmBanking_Service</name>
+        <designer>
+            <lockedProperties/>
+            <fixedChildren/>
+            <resourceDescriptions/>
+        </designer>
+        <fileLocationProperty>E:\_ T I B C O N I A N\@EAR-File\HLI_FirmBanking_Service.ear</fileLocationProperty>
+    </enterpriseArchive>
+</Repository:repository>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>Implementation/Process/IncomingGetFileActIN.process</pd:name>
+    <pd:startName>Timer</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="Timer">
+        <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>
+        <pd:resourceType>ae.activities.timer</pd:resourceType>
+        <pd:x>36</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <StartTime>%%HLIFirmBanking/Timer/StartTime%%</StartTime>
+            <Frequency>true</Frequency>
+            <TimeInterval>%%HLIFirmBanking/Timer/IntervalGetFileIN%%</TimeInterval>
+            <FrequencyIndex>Millisecond</FrequencyIndex>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>256</pd:endX>
+    <pd:endY>44</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1648093344681</pd:targetNamespace>
+    <pd:activity name="JavaGetFIle">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>137</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <fileName>IncomingGetFileActINJavaGetFIle</fileName>
+            <packageName>Implementation.Process.IncomingGetFileActIN</packageName>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <fullsource>package Implementation.Process.IncomingGetFileActIN;
+import java.util.*;
+import java.io.*;
+import com.jcraft.jsch.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class IncomingGetFileActINJavaGetFIle{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String HostSFTP = "";
+	protected int PortSFTP = 0;
+	protected String Username = "";
+	protected String RemoteDir = "";
+	protected String LocalDir = "";
+	protected String errMessage = "";
+	public String getHostSFTP() {
+		return HostSFTP;
+	}
+	public void setHostSFTP(String val) {
+		HostSFTP = val;
+	}
+	public int getPortSFTP() {
+		return PortSFTP;
+	}
+	public void setPortSFTP(int val) {
+		PortSFTP = val;
+	}
+	public String getUsername() {
+		return Username;
+	}
+	public void setUsername(String val) {
+		Username = val;
+	}
+	public String getRemoteDir() {
+		return RemoteDir;
+	}
+	public void setRemoteDir(String val) {
+		RemoteDir = val;
+	}
+	public String getLocalDir() {
+		return LocalDir;
+	}
+	public void setLocalDir(String val) {
+		LocalDir = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public IncomingGetFileActINJavaGetFIle() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String HostSFTP
+	In  : int PortSFTP
+	In  : String Username
+	In  : String RemoteDir
+	In  : String LocalDir
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+		
+		Session sessionInput = null;
+		Channel channelInput = null;
+		ChannelSftp channelSftpInput = null;
+		String fileName;
+		try {
+		    JSch jsch = new JSch();
+		    sessionInput = jsch.getSession(Username, HostSFTP, PortSFTP);
+		    sessionInput.setPassword(com.tibco.pe.plugin.PluginProperties.getProperty("tibco.clientVar.HLIFirmBanking/SFTP/FileActINC/Pass"));
+		    java.util.Properties config = new java.util.Properties();
+		    config.put("StrictHostKeyChecking", "no");
+		    sessionInput.setConfig(config);
+		    sessionInput.connect();
+		    channelInput = sessionInput.openChannel("sftp");
+		    channelInput.connect();
+		    channelSftpInput = (ChannelSftp) channelInput;
+		    channelSftpInput.cd(RemoteDir);
+		    channelSftpInput.lcd(LocalDir);
+		    @SuppressWarnings("unchecked")
+		    Vector&lt;ChannelSftp.LsEntry&gt; list = channelSftpInput.ls(".");
+		    for (ChannelSftp.LsEntry oListItem : list) {
+			if (!oListItem.getAttrs().isDir()) {
+				int iend = oListItem.getFilename().indexOf(".xml");
+				if (iend &gt; 0) {
+					fileName = oListItem.getFilename();
+					channelSftpInput.get(oListItem.getFilename(), fileName);
+					//channelSftpInput.rm(oListItem.getFilename());
+				}
+			}
+		    }
+		    channelSftpInput.disconnect();
+		    sessionInput.disconnect();
+		} catch (Exception ex) {
+		
+		    errMessage = ExceptionUtils.getMessage(ex);
+		}
+
+	}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>HostSFTP</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>PortSFTP</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>Username</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>RemoteDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>LocalDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>IncomingGetFileActINJavaGetFIle</name>
+                    <byteCode>yv66vgAAADMAtAkALABYCQAsAFkJACwAWgkALABbCQAsAFwJACwAXQoALQBeCABfBwBgCgAJAF4KAAkAYQgAYgoAYwBkCgBlAGYHAGcKAA8AXggAaAgAaQoADwBqCgBlAGsKAGUAbAgAbQoAZQBuCgBvAGwHAHAKABkAcQoAGQByCABzCgAZAHQKAHUAdgsAdwB4CwB3AHkHAHoKACEAfQoAfgB/CgAhAIAIAIEKAIIAgwoAGQCECgAZAIUKAGUAhQcAhgoAhwCIBwCJBwCKAQAISG9zdFNGVFABABJMamF2YS9sYW5nL1N0cmluZzsBAAhQb3J0U0ZUUAEAAUkBAAhVc2VybmFtZQEACVJlbW90ZURpcgEACExvY2FsRGlyAQAKZXJyTWVzc2FnZQEAC2dldEhvc3RTRlRQAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQALc2V0SG9zdFNGVFABABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAtnZXRQb3J0U0ZUUAEAAygpSQEAC3NldFBvcnRTRlRQAQAEKEkpVgEAC2dldFVzZXJuYW1lAQALc2V0VXNlcm5hbWUBAAxnZXRSZW1vdGVEaXIBAAxzZXRSZW1vdGVEaXIBAAtnZXRMb2NhbERpcgEAC3NldExvY2FsRGlyAQANZ2V0ZXJyTWVzc2FnZQEADXNldGVyck1lc3NhZ2UBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAA1TdGFja01hcFRhYmxlBwCJBwCLBwCMBwBwBwBgBwBnBwCNBwCOBwCGAQAKRXhjZXB0aW9ucwEAClNvdXJjZUZpbGUBACRJbmNvbWluZ0dldEZpbGVBY3RJTkphdmFHZXRGSWxlLmphdmEMAC4ALwwAMAAxDAAyAC8MADMALwwANAAvDAA1AC8MAEgASQEAAAEAFGNvbS9qY3JhZnQvanNjaC9KU2NoDACPAJABADN0aWJjby5jbGllbnRWYXIuSExJRmlybUJhbmtpbmcvU0ZUUC9GaWxlQWN0SU5DL1Bhc3MHAJEMAJIAkwcAiwwAlAA7AQAUamF2YS91dGlsL1Byb3BlcnRpZXMBABVTdHJpY3RIb3N0S2V5Q2hlY2tpbmcBAAJubwwAlQCWDACXAJgMAJkASQEABHNmdHAMAJoAmwcAjAEAG2NvbS9qY3JhZnQvanNjaC9DaGFubmVsU2Z0cAwAnAA7DACdADsBAAEuDACeAJ8HAI0MAKAAoQcAjgwAogCjDACkAKUBACNjb20vamNyYWZ0L2pzY2gvQ2hhbm5lbFNmdHAkTHNFbnRyeQEAB0xzRW50cnkBAAxJbm5lckNsYXNzZXMMAKYApwcAqAwAqQCjDACqADcBAAQueG1sBwCrDACsAK0MAK4ArwwAsABJAQATamF2YS9sYW5nL0V4Y2VwdGlvbgcAsQwAsgCzAQBLSW1wbGVtZW50YXRpb24vUHJvY2Vzcy9JbmNvbWluZ0dldEZpbGVBY3RJTi9JbmNvbWluZ0dldEZpbGVBY3RJTkphdmFHZXRGSWxlAQAQamF2YS9sYW5nL09iamVjdAEAF2NvbS9qY3JhZnQvanNjaC9TZXNzaW9uAQAXY29tL2pjcmFmdC9qc2NoL0NoYW5uZWwBABBqYXZhL3V0aWwvVmVjdG9yAQASamF2YS91dGlsL0l0ZXJhdG9yAQAKZ2V0U2Vzc2lvbgEAQChMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztJKUxjb20vamNyYWZ0L2pzY2gvU2Vzc2lvbjsBACRjb20vdGliY28vcGUvcGx1Z2luL1BsdWdpblByb3BlcnRpZXMBAAtnZXRQcm9wZXJ0eQEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQALc2V0UGFzc3dvcmQBAANwdXQBADgoTGphdmEvbGFuZy9PYmplY3Q7TGphdmEvbGFuZy9PYmplY3Q7KUxqYXZhL2xhbmcvT2JqZWN0OwEACXNldENvbmZpZwEAGShMamF2YS91dGlsL1Byb3BlcnRpZXM7KVYBAAdjb25uZWN0AQALb3BlbkNoYW5uZWwBAC0oTGphdmEvbGFuZy9TdHJpbmc7KUxjb20vamNyYWZ0L2pzY2gvQ2hhbm5lbDsBAAJjZAEAA2xjZAEAAmxzAQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS91dGlsL1ZlY3RvcjsBAAhpdGVyYXRvcgEAFigpTGphdmEvdXRpbC9JdGVyYXRvcjsBAAdoYXNOZXh0AQADKClaAQAEbmV4dAEAFCgpTGphdmEvbGFu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</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <HostSFTP>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftHost"/>
+                </HostSFTP>
+                <PortSFTP>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftPort"/>
+                </PortSFTP>
+                <Username>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActINC/User"/>
+                </Username>
+                <RemoteDir>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActINC/Dir"/>
+                </RemoteDir>
+                <LocalDir>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/General/LocalFolderIN"/>
+                </LocalDir>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogERR">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>337</pd:x>
+        <pd:y>42</pd:y>
+        <config>
+            <role>Error</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('GET Incoming File has been ', $_globalVariables/ns:GlobalVariables/SharedResources/Status/ERROR,' => ', $_error/ns1:ErrorReport/Msg)"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="current-dateTime()"/>
+                </msgCode>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>416</pd:x>
+        <pd:y>38</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="LogFAIL">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>140</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <role>Failed</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('GET Incoming File has been ', $_globalVariables/ns:GlobalVariables/SharedResources/ResponseCode/FAILED,' => ', tib:trim($JavaGetFIle/javaCodeActivityOutput/errMessage))"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="current-dateTime()"/>
+                </msgCode>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Timer</pd:from>
+        <pd:to>JavaGetFIle</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JavaGetFIle</pd:from>
+        <pd:to>End</pd:to>
+        <pd:xpathDescription>Success</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16751104</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>tib:trim($JavaGetFIle/javaCodeActivityOutput/errMessage) = ''</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>LogERR</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogERR</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JavaGetFIle</pd:from>
+        <pd:to>LogFAIL</pd:to>
+        <pd:xpathDescription>Failed</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-6750055</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogFAIL</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

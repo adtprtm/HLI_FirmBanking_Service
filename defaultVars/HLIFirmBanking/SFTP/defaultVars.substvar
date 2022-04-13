@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>SFTPBackupHost</name>
+			<value>10.2.62.224</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649375588405</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>SFTPBackupPort</name>
+			<value>2211</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649403548781</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>SFTPSwiftHost</name>
+			<value>10.2.62.224</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648096208351</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>SFTPSwiftPort</name>
+			<value>2212</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648097272629</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

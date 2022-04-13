@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>IntervalGetFileIN</name>
+			<value>5</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649403949476</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>IntervalMoveFileIN</name>
+			<value>10</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649403949571</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>IntervalProcFileIN</name>
+			<value>15</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649403949630</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>IntervalResFileOUT</name>
+			<value>20000</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649403949682</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>StartTime</name>
+			<value>2022 Jan 21 08:12:00 GMT+07:00</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648094577792</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

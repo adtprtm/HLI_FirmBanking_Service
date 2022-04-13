@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>ControlAddInfo</name>
+			<value>ACK - FILE ACCEPTED</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648430884611</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>ControlGrupStat</name>
+			<value>ACTC</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648430851699</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>DirNameInsert</name>
+			<value>INSERT\</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648367774145</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>FileControlTest</name>
+			<value>1</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648428264589</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>OriginMsgNmID</name>
+			<value>pain.001.001.03</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648376638448</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

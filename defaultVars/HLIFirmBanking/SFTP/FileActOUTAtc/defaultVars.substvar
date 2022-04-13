@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>Dir</name>
+			<value>\</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648095651821</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Pass</name>
+			<value>#!7E6UCBYGYUuQCGIKS7Dc8e7nbr1XmQhmFz9ZGXKtuDZ/k7c3ZBU3Xw==</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Password</type>
+			<modTime>1648428116813</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>User</name>
+			<value>FirmActOUTAttach</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1648095651568</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

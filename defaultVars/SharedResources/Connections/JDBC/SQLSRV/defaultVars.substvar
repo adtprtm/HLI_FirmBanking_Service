@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>jdbc.password</name>
+			<value>#!jhKkKOchLfkI5aZ5GoH88dtU+kPmEkEzddDN4CEeBWMGG9uuYihlpg==</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Password</type>
+			<modTime>1649404285813</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>jdbc.url</name>
+			<value>jdbc:sqlserver://10.2.62.51:1433;databaseName=DB_FIRMBANKING</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1649404285923</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns4="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns3="www.tibco.com/plugin/Sleep" xmlns:CommonUtils="java://Commons" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="http://www.tibco.com/namespaces/tnt/plugins/file">
+    <pd:name>Implementation/Process/GenerateFileHeader.process</pd:name>
+    <pd:startName>JMSQReceiver</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="JMSQReceiver">
+        <pd:type>com.tibco.plugin.jms.JMSQueueEventSource</pd:type>
+        <pd:resourceType>ae.activities.JMSQueueEventSource</pd:resourceType>
+        <pd:x>57</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <PermittedMessageType>XML Text</PermittedMessageType>
+            <SessionAttributes>
+                <transacted>false</transacted>
+                <acknowledgeMode>1</acknowledgeMode>
+                <maxSessions>1</maxSessions>
+                <destination>%%HLIFirmBanking/General/QueueFileHeader%%</destination>
+            </SessionAttributes>
+            <ConfigurableHeaders>
+                <JMSDeliveryMode>PERSISTENT</JMSDeliveryMode>
+                <JMSExpiration>0</JMSExpiration>
+                <JMSPriority>4</JMSPriority>
+            </ConfigurableHeaders>
+            <ConnectionReference>/SharedResources/Commons/Connections/JMS/JMS-Connection.sharedjmscon</ConnectionReference>
+            <OutDataxsdString>
+                <xsd:element name="JMSData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="MessageID" type="xsd:string"/>
+                            <xsd:element name="OrigMsgID" type="xsd:string"/>
+                            <xsd:element name="FileName" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </OutDataxsdString>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>357</pd:endX>
+    <pd:endY>44</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1648372131827</pd:targetNamespace>
+    <pd:activity name="SetHeader">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>62</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <fileName>GenerateFileHeaderSetHeader</fileName>
+            <packageName>Implementation.Process.GenerateFileHeader</packageName>
+            <fullsource>package Implementation.Process.GenerateFileHeader;
+import java.util.*;
+import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class GenerateFileHeaderSetHeader{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String messageId = "";
+	protected String outputDir = "";
+	protected String fileName = "";
+	protected String isTest = "";
+	protected String headerFile = "";
+	protected String errMessage = "";
+	public String getmessageId() {
+		return messageId;
+	}
+	public void setmessageId(String val) {
+		messageId = val;
+	}
+	public String getoutputDir() {
+		return outputDir;
+	}
+	public void setoutputDir(String val) {
+		outputDir = val;
+	}
+	public String getfileName() {
+		return fileName;
+	}
+	public void setfileName(String val) {
+		fileName = val;
+	}
+	public String getisTest() {
+		return isTest;
+	}
+	public void setisTest(String val) {
+		isTest = val;
+	}
+	public String getheaderFile() {
+		return headerFile;
+	}
+	public void setheaderFile(String val) {
+		headerFile = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public GenerateFileHeaderSetHeader() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String messageId
+	In  : String outputDir
+	In  : String fileName
+	In  : String isTest
+	Out : String headerFile
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+	DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = null;
+        try {
+            docBuilder = docFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+
+            e.printStackTrace();
+        }
+        
+        Document doc = docBuilder.newDocument();
+        doc.setXmlStandalone(false);
+        
+        // DataPDU START
+        Element DataPDU = doc.createElement("Saa:DataPDU");
+        doc.appendChild(DataPDU);
+        DataPDU.setAttribute("xmlns:Saa", "urn:swift:saa:xsd:saa.2.0");
+        DataPDU.setAttribute("xmlns:Sw", "urn:swift:snl:ns.Sw");
+        DataPDU.setAttribute("xmlns:SwGbl", "urn:swift:snl:ns.SwGbl");
+        DataPDU.setAttribute("xmlns:SwInt", "urn:swift:snl:ns.SwInt");
+        DataPDU.setAttribute("xmlns:SwSec", "urn:swift:snl:ns.SwSec");
+        
+   
+        // Revision START
+        Element Revision = doc.createElement("Saa:Revision");
+        Revision.appendChild(doc.createTextNode("2.0.7"));
+        DataPDU.appendChild(Revision);
+        
+        
+        Element Header = doc.createElement("Saa:Header");
+        DataPDU.appendChild(Header);
+        
+        
+        Element Message = doc.createElement("Saa:Message");
+        Header.appendChild(Message);
+        
+        Element SenderReference = doc.createElement("Saa:SenderReference");
+        SenderReference.appendChild(doc.createTextNode(messageId));
+        Message.appendChild(SenderReference);
+        
+        
+        Element MessageIdentifier = doc.createElement("Saa:MessageIdentifier");
+        MessageIdentifier.appendChild(doc.createTextNode("pain.002.001.03"));
+        Message.appendChild(MessageIdentifier);
+        
+        Element Format = doc.createElement("Saa:Format");
+        Format.appendChild(doc.createTextNode("File"));
+        Message.appendChild(Format);
+        
+        
+        Element Sender = doc.createElement("Saa:Sender");
+        Message.appendChild(Sender);
+        Element SenderDN = doc.createElement("Saa:DN");
+        SenderDN.appendChild(doc.createTextNode("o=bbukidja,o=swift"));
+        Sender.appendChild(SenderDN);
+        Element SenderFullName = doc.createElement("Saa:FullName");
+        Sender.appendChild(SenderFullName);
+        Element SenderX1 = doc.createElement("Saa:X1");
+        SenderX1.appendChild(doc.createTextNode("BBUKIDJAXXX"));
+        SenderFullName.appendChild(SenderX1);
+        
+        
+        
+        Element Receiver = doc.createElement("Saa:Receiver");
+        Message.appendChild(Receiver);
+        
+        Element ReceiverDN = doc.createElement("Saa:DN");
+        if ( "1".equals(isTest) )
+        {
+        	ReceiverDN.appendChild(doc.createTextNode("o=cemmkrse,o=swift"));
+        }else
+        {
+        	ReceiverDN.appendChild(doc.createTextNode("o=bbukidja,o=swift"));
+        }
+        
+        Receiver.appendChild(ReceiverDN);
+        Element ReceiverFullName = doc.createElement("Saa:FullName");
+        Receiver.appendChild(ReceiverFullName);
+        Element ReceiverX1 = doc.createElement("Saa:X1");
+        if ( "1".equals(isTest) )
+        {
+        	ReceiverX1.appendChild(doc.createTextNode("CEMMKRSEXXX"));
+        }else
+        {
+        	ReceiverX1.appendChild(doc.createTextNode("BBUKIDJAXXX"));
+        }
+        ReceiverFullName.appendChild(ReceiverX1);
+
+        
+        Element InterfaceInfo = doc.createElement("Saa:InterfaceInfo");
+        Message.appendChild(InterfaceInfo);
+        
+        Element UserReference = doc.createElement("Saa:UserReference");
+        UserReference.appendChild(doc.createTextNode(messageId));
+        InterfaceInfo.appendChild(UserReference);
+        
+        
+        Element NetworkInfo = doc.createElement("Saa:NetworkInfo");
+        Message.appendChild(NetworkInfo);
+        
+        Element Service = doc.createElement("Saa:Service");
+        Service.appendChild(doc.createTextNode("swift.corp.fast!p"));
+        NetworkInfo.appendChild(Service);
+        
+       
+        Element Body = doc.createElement("Saa:Body");
+        
+        Body.appendChild(doc.createTextNode(fileName));
+        DataPDU.appendChild(Body);
+        
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+        Transformer transformer = null;
+        try {
+            transformer = transformerFactory.newTransformer();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        }
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); 
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
+	
+	int iend = fileName.indexOf(".");
+        fileName = fileName.substring(0, iend);
+	headerFile = outputDir + fileName + ".HEADER.XML";
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = null;
+        try {
+            result = new StreamResult(new FileOutputStream(new File(headerFile )));
+            transformer.transform(source, result);
+        } catch (FileNotFoundException e) {
+            errMessage = ExceptionUtils.getMessage(e);
+        } catch (TransformerException e) {
+            errMessage = ExceptionUtils.getMessage(e);
+        }
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>messageId</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>outputDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>fileName</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>isTest</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>headerFile</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>GenerateFileHeaderSetHeader</name>
+                    <byteCode>yv66vgAAADMBFAkAWQCHCQBZAIgJAFkAiQkAWQCKCQBZAIsJAFkAjAoAWgCNCACOCgCPAJAKAI8AkQcAkgoACwCTCgCUAJULAJYAlwgAmAsAlgCZCwCWAJoIAJsIAJwLAJ0AnggAnwgAoAgAoQgAoggAowgApAgApQgApggApwgAqAsAlgCpCwCdAJoIAKoIAKsIAKwIAK0IAK4IAK8IALAIALEIALIIALMIALQIALUIALYIALcIALgKALkAuggAuwgAvAgAvQgAvggAvwgAwAgAwQgAwgoAwwDECgDDAMUHAMYKADsAkwgAxwgAyAoAyQDKCADLCADMCADNCADOCADPCADQCgC5ANEKALkA0gcA0woASACNCgBIANQIANUKAEgA1gcA1woATQDYBwDZBwDaBwDbCgBRANwKAFAA3QoATwDeCgDJAN8HAOAKAOEA4gcA4wcA5AcA5QEACW1lc3NhZ2VJZAEAEkxqYXZhL2xhbmcvU3RyaW5nOwEACW91dHB1dERpcgEACGZpbGVOYW1lAQAGaXNUZXN0AQAKaGVhZGVyRmlsZQEACmVyck1lc3NhZ2UBAAxnZXRtZXNzYWdlSWQBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAxzZXRtZXNzYWdlSWQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAxnZXRvdXRwdXREaXIBAAxzZXRvdXRwdXREaXIBAAtnZXRmaWxlTmFtZQEAC3NldGZpbGVOYW1lAQAJZ2V0aXNUZXN0AQAJc2V0aXNUZXN0AQANZ2V0aGVhZGVyRmlsZQEADXNldGhlYWRlckZpbGUBAA1nZXRlcnJNZXNzYWdlAQANc2V0ZXJyTWVzc2FnZQEABjxpbml0PgEAAygpVgEABmludm9rZQEADVN0YWNrTWFwVGFibGUHAOQHAOYHAOcHAJIHAOgHAOkHAOoHAOsHAMYHANcHANkHAOAHAOMBAApFeGNlcHRpb25zBwDsAQAKU291cmNlRmlsZQEAIEdlbmVyYXRlRmlsZUhlYWRlclNldEhlYWRlci5qYXZhDABbAFwMAF0AXAwAXgBcDABfAFwMAGAAXAwAYQBcDAByAHMBAAAHAOYMAO0A7gwA7wDwAQAuamF2YXgveG1sL3BhcnNlcnMvUGFyc2VyQ29uZmlndXJhdGlvbkV4Y2VwdGlvbgwA8QBzBwDnDADyAPMHAOgMAPQA9QEAC1NhYTpEYXRhUERVDAD2APcMAPgA+QEACXhtbG5zOlNhYQEAGXVybjpzd2lmdDpzYWE6eHNkOnNhYS4yLjAHAOkMAPoA+wEACHhtbG5zOlN3AQATdXJuOnN3aWZ0OnNubDpucy5TdwEAC3htbG5zOlN3R2JsAQAWdXJuOnN3aWZ0OnNubDpucy5Td0dibAEAC3htbG5zOlN3SW50AQAWdXJuOnN3aWZ0OnNubDpucy5Td0ludAEAC3htbG5zOlN3U2VjAQAWdXJuOnN3aWZ0OnNubDpucy5Td1NlYwEADFNhYTpSZXZpc2lvbgEABTIuMC43DAD8AP0BAApTYWE6SGVhZGVyAQALU2FhOk1lc3NhZ2UBABNTYWE6U2VuZGVyUmVmZXJlbmNlAQAVU2FhOk1lc3NhZ2VJZGVudGlmaWVyAQAPcGFpbi4wMDIuMDAxLjAzAQAKU2FhOkZvcm1hdAEABEZpbGUBAApTYWE6U2VuZGVyAQAGU2FhOkROAQASbz1iYnVraWRqYSxvPXN3aWZ0AQAMU2FhOkZ1bGxOYW1lAQAGU2FhOlgxAQALQkJVS0lESkFYWFgBAAxTYWE6UmVjZWl2ZXIBAAExBwD+DAD/AQABABJvPWNlbW1rcnNlLG89c3dpZnQBAAtDRU1NS1JTRVhYWAEAEVNhYTpJbnRlcmZhY2VJbmZvAQARU2FhOlVzZXJSZWZlcmVuY2UBAA9TYWE6TmV0d29ya0luZm8BAAtTYWE6U2VydmljZQEAEXN3aWZ0LmNvcnAuZmFzdCFwAQAIU2FhOkJvZHkHAOoMAO0BAQwBAgEDAQA1amF2YXgveG1sL3RyYW5zZm9ybS9UcmFuc2Zvcm1lckNvbmZpZ3VyYXRpb25FeGNlcHRpb24BACl7aHR0cDovL3htbC5hcGFjaGUub3JnL3hzbHR9aW5kZW50LWFtb3VudAEAATQHAOsMAQQA+wEACGVuY29kaW5nAQAFVVRGLTgBAAZpbmRlbnQBAAN5ZXMBAA5kb2N0eXBlLXB1YmxpYwEAAS4MAQUBBgwBBwEIAQAXamF2YS9sYW5nL1N0cmluZ0J1aWxkZXIMAQkBCgEACy5IRUFERVIuWE1MDAELAGMBACFqYXZheC94bWwvdHJhbnNmb3JtL2RvbS9ET01Tb3VyY2UMAHIBDAEAJ2phdmF4L3htbC90cmFuc2Zvcm0vc3RyZWFtL1N0cmVhbVJlc3VsdAEAGGphdmEvaW8vRmlsZU91dHB1dFN0cmVhbQEADGphdmEvaW8vRmlsZQwAcgBnDAByAQ0MAHIBDgwBDwEQAQAdamF2YS9pby9GaWxlTm90Rm91bmRFeGNlcHRpb24HAREMARIBEwEAKGphdmF4L3htbC90cmFuc2Zvcm0vVHJhbnNmb3JtZXJFeGNlcHRpb24BAEVJbXBsZW1lbnRhdGlvbi9Qcm9jZXNzL0dlbmVyYXRlRmlsZUhlYWRlci9HZW5lcmF0ZUZpbGVIZWFkZXJTZXRIZWFkZXIBABBqYXZhL2xhbmcvT2JqZWN0AQAoamF2YXgveG1sL3BhcnNlcnMvRG9jdW1lbnRCdWlsZGVyRmFjdG9yeQEAIWphdmF4L3htbC9wYXJzZXJzL0RvY3VtZW50QnVpbGRlcgEAFG9yZy93M2MvZG9tL0RvY3VtZW50AQATb3JnL3czYy9kb20vRWxlbWVudAEAJmphdmF4L3htbC90cmFuc2Zvcm0vVHJhbnNmb3JtZXJGYWN0b3J5AQAfamF2YXgveG1sL3RyYW5zZm9ybS9UcmFuc2Zvcm1lcgEAE2phdmEvbGFuZy9FeGNlcHRpb24BAAtuZXdJbnN0YW5jZQEALCgpTGphdmF4L3htbC9wYXJzZXJzL0RvY3VtZW50QnVpbGRlckZhY3Rvcnk7AQASbmV3RG9jdW1lbnRCdWlsZGVyAQAlKClMamF2YXgveG1sL3BhcnNlcnMvRG9jdW1lbnRCdWlsZGVyOwEAD3ByaW50U3RhY2tUcmFjZQEAC25ld0RvY3VtZW50AQAYKClMb3JnL3czYy9kb20vRG9jdW1lbnQ7AQAQc2V0WG1sU3RhbmRhbG9uZQEABChaKVYBAA1jcmVhdGVFbGVtZW50AQApKExqYXZhL2xhbmcvU3RyaW5nOylMb3JnL3czYy9kb20vRWxlbWVudDsBAAthcHBlbmRDaGlsZAEAJihMb3JnL3czYy9kb20vTm9kZTspTG9yZy93M2MvZG9tL05vZGU7AQAMc2V0QXR0cmlidXRlAQAnKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAOY3JlYXRlVGV4dE5vZGUBACYoTGphdmEvbGFuZy9TdHJpbmc7KUxvcmcvdzNjL2RvbS9UZXh0OwEAEGphdmEvbGFuZy9TdHJpbmcBAAZlcXVhbHMBABUoTGphdmEvbGFuZy9PYmplY3Q7KVoBACooKUxqYXZheC94bWwvdHJhbnNmb3JtL1RyYW5zZm9ybWVyRmFjdG9yeTsBAA5uZXdUcmFuc2Zvcm1lcgEAIygpTGphdmF4L3htbC90cmFuc2Zvcm0vVHJhbnNmb3JtZXI7AQARc2V0T3V0cHV0UHJvcGVydHkBAAdpbmRleE9mAQAVKExqYXZhL2xhbmcvU3RyaW5nOylJAQAJc3Vic3RyaW5nAQAWKElJKUxqYXZhL2xhbmcvU3RyaW5nOwEABmFwcGVuZAEALShMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmdCdWlsZGVyOwEACHRvU3RyaW5nAQAVKExvcmcvdzNjL2RvbS9Ob2RlOylWAQARKExqYXZhL2lvL0ZpbGU7KVYBABkoTGphdmEvaW8vT3V0cHV0U3RyZWFtOylWAQAJdHJhbnNmb3JtAQA7KExqYXZheC94bWwvdHJhbnNmb3JtL1NvdXJjZTtMamF2YXgveG1sL3RyYW5zZm9ybS9SZXN1bHQ7KVYBADFvcmcvYXBhY2hlL2NvbW1vbnMvbGFuZzMvZXhjZXB0aW9uL0V4Y2VwdGlvblV0aWxzAQAKZ2V0TWVzc2FnZQEAKShMamF2YS9sYW5nL1Rocm93YWJsZTspTGphdmEvbGFuZy9TdHJpbmc7ACEAWQBaAAAABgAEAFsAXAAAAAQAXQBcAAAABABeAFwAAAAEAF8AXAAAAAQAYABcAAAABABhAFwAAAAOAAEAYgBjAAEAZAAAAB0AAQABAAAABSq0AAGwAAAAAQBlAAAABgABAAAAGgABAGYAZwABAGQAAAAiAAIAAgAAAAYqK7UAAbEAAAABAGUAAAAKAAIAAAAdAAUAHgABAGgAYwABAGQAAAAdAAEAAQAAAAUqtAACsAAAAAEAZQAAAAYAAQAAACAAAQBpAGcAAQBkAAAAIgACAAIAAAAGKiu1AAKxAAAAAQBlAAAACgACAAAAIwAFACQAAQBqAGMAAQBkAAAAHQABAAEAAAAFKrQAA7AAAAABAGUAAAAGAAEAAAAmAAEAawBnAAEAZAAAACIAAgACAAAABiortQADsQAAAAEAZQAAAAoAAgAAACkABQAqAAEAbABjAAEAZAAAAB0AAQABAAAABSq0AASwAAAAAQBlAAAABgABAAAALAABAG0AZwABAGQAAAAiAAIAAgAAAAYqK7UABLEAAAABAGUAAAAKAAIAAAAvAAUAMAABAG4AYwABAGQAAAAdAAEAAQAAAAUqtAAFsAAAAAEAZQAAAAYAAQAAADIAAQBvAGcAAQBkAAAAIgACAAIAAAAGKiu1AAWxAAAAAQBlAAAACgACAAAANQAFADYAAQBwAGMAAQBkAAAAHQABAAEAAAAFKrQABrAAAAABAGUAAAAGAAEAAAA4AAEAcQBnAAEAZAAAACIAAgACAAAABiortQAGsQAAAAEAZQAAAAoAAgAAADsABQA8AAEAcgBzAAEAZAAAAF0AAgABAAAAKSq3AAcqEgi1AAEqEgi1AAIqEgi1AAMqEgi1AAQqEgi1AAUqEgi1AAaxAAAAAQBlAAAAIgAIAAAAPgAEABMACgAUABAAFQAWABYAHAAXACIAGAAoAD8AAQB0AHMAAgBkAAAGYAAHAB4AAAOeuAAJTAFNK7YACk2nAAhOLbYADCy2AA1OLQO5AA4CAC0SD7kAEAIAOgQtGQS5ABECAFcZBBISEhO5ABQDABkEEhUSFrkAFAMAGQQSFxIYuQAUAwAZBBIZEhq5ABQDABkEEhsSHLkAFAMALRIduQAQAgA6BRkFLRIeuQAfAgC5ACACAFcZBBkFuQAgAgBXLRIhuQAQAgA6BhkEGQa5ACACAFctEiK5ABACADoHGQYZB7kAIAIAVy0SI7kAEAIAOggZCC0qtAABuQAfAgC5ACACAFcZBxkIuQAgAgBXLRIkuQAQAgA6CRkJLRIluQAfAgC5ACACAFcZBxkJuQAgAgBXLRImuQAQAgA6ChkKLRInuQAfAgC5ACACAFcZBxkKuQAgAgBXLRIouQAQAgA6CxkHGQu5ACACAFctEim5ABACADoMGQwtEiq5AB8CALkAIAIAVxkLGQy5ACACAFctEiu5ABACADoNGQsZDbkAIAIAVy0SLLkAEAIAOg4ZDi0SLbkAHwIAuQAgAgBXGQ0ZDrkAIAIAVy0SLrkAEAIAOg8ZBxkPuQAgAgBXLRIpuQAQAgA6EBIvKrQABLYAMJkAFhkQLRIxuQAfAgC5ACACAFenABMZEC0SKrkAHwIAuQAgAgBXGQ8ZELkAIAIAVy0SK7kAEAIAOhEZDxkRuQAgAgBXLRIsuQAQAgA6EhIvKrQABLYAMJkAFhkSLRIyuQAfAgC5ACACAFenABMZEi0SLbkAHwIAuQAgAgBXGREZErkAIAIAVy0SM7kAEAIAOhMZBxkTuQAgAgBXLRI0uQAQAgA6FBkULSq0AAG5AB8CALkAIAIAVxkTGRS5ACACAFctEjW5ABACADoVGQcZFbkAIAIAVy0SNrkAEAIAOhYZFi0SN7kAHwIAuQAgAgBXGRUZFrkAIAIAVy0SOLkAEAIAOhcZFy0qtAADuQAfAgC5ACACAFcZBBkXuQAgAgBXuAA5OhgBOhkZGLYAOjoZpwAKOhoZGrYAPBkZEj0SPrYAPxkZEkASQbYAPxkZEkISQ7YAPxkZEkQSQ7YAPyq0AAMSRbYARjYaKiq0AAMDFRq2AEe1AAMquwBIWbcASSq0AAK2AEoqtAADtgBKEku2AEq2AEy1AAW7AE1ZLbcATjobATocuwBPWbsAUFm7AFFZKrQABbcAUrcAU7cAVDocGRkZGxkctgBVpwAcOh0qGR24AFe1AAanAA46HSoZHbgAV7UABrEABAAGAAsADgALAuEC6ALrADsDXQOBA4QAVgNdA4EDkgBYAAIAZQAAAXIAXAAAAEkABABKAAYATAALAFAADgBNAA8ATwATAFIAGABTAB8AVgApAFcAMgBYAD0AWQBIAFoAUwBbAF4AXABpAGAAcwBhAIMAYgCNAGUAlwBmAKEAaQCrAGoAtQBsAL8AbQDRAG4A2wBxAOUAcgD1AHMA/wB1AQkAdgEZAHcBIwB6AS0AewE3AHwBQQB9AVEAfgFbAH8BZQCAAW8AgQF5AIIBiQCDAZMAhwGdAIgBpwCKAbEAiwG9AI0B0ACQAeAAkwHqAJQB9ACVAf4AlgIIAJcCFACZAicAnAI3AJ4CQQChAksAogJVAKQCXwClAnEApgJ7AKkChQCqAo8ArAKZAK0CqQCuArMAsQK9ALMCzwC0AtkAtgLeALgC4QC6AugAvQLrALsC7QC8AvIAvgL7AL8DBADAAw0AwQMWAMMDIQDEAy8AxQNQAMYDWgDHA10AyQN4AMoDgQDPA4QAywOGAMwDjwDPA5IAzQOUAM4DnQDQAHUAAAEYAAv/AA4AAwcAdgcAdwcAeAABBwB5BP8BvAARBwB2BwB3BwB4BwB6BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7AAAP/QBGBwB7BwB7D/8AswAaBwB2BwB3BwB4BwB6BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB7BwB8BwB9AAEHAH4G/wCRAB0HAHYHAHcHAHgHAHoHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHsHAHwHAH0BBwB/BwCAAAEHAIFNBwCCCgCDAAAABAABAIQAAQCFAAAAAgCG</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <messageId>
+                    <xsl:value-of select="$JMSQReceiver/ns4:ActivityOutput/Body/JMSData/MessageID"/>
+                </messageId>
+                <outputDir>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/General/LocalFolderOUT"/>
+                </outputDir>
+                <fileName>
+                    <xsl:value-of select="$JMSQReceiver/ns4:ActivityOutput/Body/JMSData/FileName"/>
+                </fileName>
+                <isTest>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/Incoming/FileControlTest"/>
+                </isTest>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogEND">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>357</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <role>Finish</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('PUT File Header with MessageID ', $JMSQReceiver/ns4:ActivityOutput/Body/JMSData/OrigMsgID, ' has been ', &#xA;(if (tib:trim($SetHeader/javaCodeActivityOutput/errMessage) = '' and tib:trim($PutFile/javaCodeActivityOutput/errMessage) = '') then $_globalVariables/ns:GlobalVariables/SharedResources/ResponseCode/SUCCESS &#xA;else $_globalVariables/ns:GlobalVariables/SharedResources/ResponseCode/FAILED),&#xA;' at ', current-dateTime(), &#xA;(if (tib:trim($SetHeader/javaCodeActivityOutput/errMessage) = '' and tib:trim($PutFile/javaCodeActivityOutput/errMessage) = '') then '' &#xA;else concat(' => ', &#xA;&#x9;(if (tib:trim($SetHeader/javaCodeActivityOutput/errMessage) !='') then $SetHeader/javaCodeActivityOutput/errMessage&#xA;&#x9;else $PutFile/javaCodeActivityOutput/errMessage)&#xA;))&#xA;)"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="$JMSQReceiver/ns4:ActivityOutput/Body/JMSData/OrigMsgID"/>
+                </msgCode>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogERR">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>447</pd:x>
+        <pd:y>42</pd:y>
+        <config>
+            <role>Failed</role>
+            <suppressHeader>true</suppressHeader>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInput>
+                <message>
+                    <xsl:value-of select="concat('PUT File Header with MessageID ', $JMSQReceiver/ns4:ActivityOutput/Body/JMSData/OrigMsgID, ' has been ', $_globalVariables/ns:GlobalVariables/SharedResources/Status/ERROR, ' at ', current-dateTime(), ' => ', $_error/ns1:ErrorReport/Msg)"/>
+                </message>
+                <msgCode>
+                    <xsl:value-of select="$JMSQReceiver/ns4:ActivityOutput/Body/JMSData/OrigMsgID"/>
+                </msgCode>
+            </ns2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>448</pd:x>
+        <pd:y>154</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="PutFile">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>176</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <fileName>GenerateFileHeaderPutFile</fileName>
+            <packageName>Implementation.Process.GenerateFileHeader</packageName>
+            <fullsource>package Implementation.Process.GenerateFileHeader;
+import java.util.*;
+import java.io.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class GenerateFileHeaderPutFile{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String sftpHost = "";
+	protected int sftpPort = 0;
+	protected String sftpUser = "";
+	protected String remoteDir = "";
+	protected String localFile = "";
+	protected String errMessage = "";
+	public String getsftpHost() {
+		return sftpHost;
+	}
+	public void setsftpHost(String val) {
+		sftpHost = val;
+	}
+	public int getsftpPort() {
+		return sftpPort;
+	}
+	public void setsftpPort(int val) {
+		sftpPort = val;
+	}
+	public String getsftpUser() {
+		return sftpUser;
+	}
+	public void setsftpUser(String val) {
+		sftpUser = val;
+	}
+	public String getremoteDir() {
+		return remoteDir;
+	}
+	public void setremoteDir(String val) {
+		remoteDir = val;
+	}
+	public String getlocalFile() {
+		return localFile;
+	}
+	public void setlocalFile(String val) {
+		localFile = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public GenerateFileHeaderPutFile() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String sftpHost
+	In  : int sftpPort
+	In  : String sftpUser
+	In  : String remoteDir
+	In  : String localFile
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+	try {
+		JSch jSch = new JSch();
+
+		Session sessionHead = jSch.getSession(sftpUser, sftpHost, sftpPort);
+
+		sessionHead.setPassword(com.tibco.pe.plugin.PluginProperties.getProperty("tibco.clientVar.HLIFirmBanking/SFTP/FileActOUT/Pass"));
+
+		Properties config = new Properties();
+		config.put("StrictHostKeyChecking","no");
+		sessionHead.setConfig(config);
+
+		sessionHead.connect();
+
+		ChannelSftp channelSftpHead = (ChannelSftp) sessionHead.openChannel("sftp");
+		channelSftpHead.connect();
+		channelSftpHead.put(localFile, remoteDir);
+
+		channelSftpHead.disconnect();
+		sessionHead.disconnect();
+	} catch (Exception ex) {
+		
+		    errMessage = ExceptionUtils.getMessage(ex);
+		}
+	}
+}
+</fullsource>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <outputData>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>sftpHost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpPort</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpUser</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>remoteDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>localFile</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>GenerateFileHeaderPutFile</name>
+                    <byteCode>yv66vgAAADMAdQkAHwBDCQAfAEQJAB8ARQkAHwBGCQAfAEcJAB8ASAoAIABJCABKBwBLCgAJAEkKAAkATAgATQoATgBPCgBQAFEHAFIKAA8ASQgAUwgAVAoADwBVCgBQAFYKAFAAVwgAWAoAUABZBwBaCgAYAFcKABgAWwoAGABcCgBQAFwHAF0KAF4AXwcAYAcAYQEACHNmdHBIb3N0AQASTGphdmEvbGFuZy9TdHJpbmc7AQAIc2Z0cFBvcnQBAAFJAQAIc2Z0cFVzZXIBAAlyZW1vdGVEaXIBAAlsb2NhbEZpbGUBAAplcnJNZXNzYWdlAQALZ2V0c2Z0cEhvc3QBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAtzZXRzZnRwSG9zdAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAC2dldHNmdHBQb3J0AQADKClJAQALc2V0c2Z0cFBvcnQBAAQoSSlWAQALZ2V0c2Z0cFVzZXIBAAtzZXRzZnRwVXNlcgEADGdldHJlbW90ZURpcgEADHNldHJlbW90ZURpcgEADGdldGxvY2FsRmlsZQEADHNldGxvY2FsRmlsZQEADWdldGVyck1lc3NhZ2UBAA1zZXRlcnJNZXNzYWdlAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQANU3RhY2tNYXBUYWJsZQcAXQEACkV4Y2VwdGlvbnMBAApTb3VyY2VGaWxlAQAeR2VuZXJhdGVGaWxlSGVhZGVyUHV0RmlsZS5qYXZhDAAhACIMACMAJAwAJQAiDAAmACIMACcAIgwAKAAiDAA7ADwBAAABABRjb20vamNyYWZ0L2pzY2gvSlNjaAwAYgBjAQAzdGliY28uY2xpZW50VmFyLkhMSUZpcm1CYW5raW5nL1NGVFAvRmlsZUFjdE9VVC9QYXNzBwBkDABlAGYHAGcMAGgALgEAFGphdmEvdXRpbC9Qcm9wZXJ0aWVzAQAVU3RyaWN0SG9zdEtleUNoZWNraW5nAQACbm8MAGkAagwAawBsDABtADwBAARzZnRwDABuAG8BABtjb20vamNyYWZ0L2pzY2gvQ2hhbm5lbFNmdHAMAGkAcAwAcQA8AQATamF2YS9sYW5nL0V4Y2VwdGlvbgcAcgwAcwB0AQBDSW1wbGVtZW50YXRpb24vUHJvY2Vzcy9HZW5lcmF0ZUZpbGVIZWFkZXIvR2VuZXJhdGVGaWxlSGVhZGVyUHV0RmlsZQEAEGphdmEvbGFuZy9PYmplY3QBAApnZXRTZXNzaW9uAQBAKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nO0kpTGNvbS9qY3JhZnQvanNjaC9TZXNzaW9uOwEAJGNvbS90aWJjby9wZS9wbHVnaW4vUGx1Z2luUHJvcGVydGllcwEAC2dldFByb3BlcnR5AQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBABdjb20vamNyYWZ0L2pzY2gvU2Vzc2lvbgEAC3NldFBhc3N3b3JkAQADcHV0AQA4KExqYXZhL2xhbmcvT2JqZWN0O0xqYXZhL2xhbmcvT2JqZWN0OylMamF2YS9sYW5nL09iamVjdDsBAAlzZXRDb25maWcBABkoTGphdmEvdXRpbC9Qcm9wZXJ0aWVzOylWAQAHY29ubmVjdAEAC29wZW5DaGFubmVsAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMY29tL2pjcmFmdC9qc2NoL0NoYW5uZWw7AQAnKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAKZGlzY29ubmVjdAEAMW9yZy9hcGFjaGUvY29tbW9ucy9sYW5nMy9leGNlcHRpb24vRXhjZXB0aW9uVXRpbHMBAApnZXRNZXNzYWdlAQApKExqYXZhL2xhbmcvVGhyb3dhYmxlOylMamF2YS9sYW5nL1N0cmluZzsAIQAfACAAAAAGAAQAIQAiAAAABAAjACQAAAAEACUAIgAAAAQAJgAiAAAABAAnACIAAAAEACgAIgAAAA4AAQApACoAAQArAAAAHQABAAEAAAAFKrQAAbAAAAABACwAAAAGAAEAAAARAAEALQAuAAEAKwAAACIAAgACAAAABiortQABsQAAAAEALAAAAAoAAgAAABQABQAVAAEALwAwAAEAKwAAAB0AAQABAAAABSq0AAKsAAAAAQAsAAAABgABAAAAFwABADEAMgABACsAAAAiAAIAAgAAAAYqG7UAArEAAAABACwAAAAKAAIAAAAaAAUAGwABADMAKgABACsAAAAdAAEAAQAAAAUqtAADsAAAAAEALAAAAAYAAQAAAB0AAQA0AC4AAQArAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAsAAAACgACAAAAIAAFACEAAQA1ACoAAQArAAAAHQABAAEAAAAFKrQABLAAAAABACwAAAAGAAEAAAAjAAEANgAuAAEAKwAAACIAAgACAAAABiortQAEsQAAAAEALAAAAAoAAgAAACYABQAnAAEANwAqAAEAKwAAAB0AAQABAAAABSq0AAWwAAAAAQAsAAAABgABAAAAKQABADgALgABACsAAAAiAAIAAgAAAAYqK7UABbEAAAABACwAAAAKAAIAAAAsAAUALQABADkAKgABACsAAAAdAAEAAQAAAAUqtAAGsAAAAAEALAAAAAYAAQAAAC8AAQA6AC4AAQArAAAAIgACAAIAAAAGKiu1AAaxAAAAAQAsAAAACgACAAAAMgAFADMAAQA7ADwAAQArAAAAXAACAAEAAAAoKrcAByoSCLUAASoDtQACKhIItQADKhIItQAEKhIItQAFKhIItQAGsQAAAAEALAAAACIACAAAADUABAAKAAoACwAPAAwAFQANABsADgAhAA8AJwA2AAEAPQA8AAIAKwAAANoABAAFAAAAb7sACVm3AApMKyq0AAMqtAABKrQAArYAC00sEgy4AA22AA67AA9ZtwAQTi0SERIStgATVywttgAULLYAFSwSFrYAF8AAGDoEGQS2ABkZBCq0AAUqtAAEtgAaGQS2ABsstgAcpwAMTCoruAAetQAGsQABAAAAYgBlAB0AAgAsAAAAQgAQAAAAQQAIAEMAGQBFACIARwAqAEgAMwBJADgASwA8AE0ARwBOAEwATwBZAFEAXgBSAGIAVgBlAFMAZgBVAG4AVwA+AAAACQAC9wBlBwA/CABAAAAABAABAB0AAQBBAAAAAgBC</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <sftpHost>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftHost"/>
+                </sftpHost>
+                <sftpPort>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPSwiftPort"/>
+                </sftpPort>
+                <sftpUser>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActOUT/User"/>
+                </sftpUser>
+                <remoteDir>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActOUT/Dir"/>
+                </remoteDir>
+                <localFile>
+                    <xsl:value-of select="translate($SetHeader/javaCodeActivityOutput/headerFile, '/', '\')"/>
+                </localFile>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="BakFile">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>177</pd:x>
+        <pd:y>44</pd:y>
+        <config>
+            <fileName>GenerateFileHeaderBakFile</fileName>
+            <packageName>Implementation.Process.GenerateFileHeader</packageName>
+            <fullsource>package Implementation.Process.GenerateFileHeader;
+import java.util.*;
+import java.io.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+public class GenerateFileHeaderBakFile{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String sftpHost = "";
+	protected int sftpPort = 0;
+	protected String sftpUser = "";
+	protected String remoteDir = "";
+	protected String localFile = "";
+	protected String errMessage = "";
+	public String getsftpHost() {
+		return sftpHost;
+	}
+	public void setsftpHost(String val) {
+		sftpHost = val;
+	}
+	public int getsftpPort() {
+		return sftpPort;
+	}
+	public void setsftpPort(int val) {
+		sftpPort = val;
+	}
+	public String getsftpUser() {
+		return sftpUser;
+	}
+	public void setsftpUser(String val) {
+		sftpUser = val;
+	}
+	public String getremoteDir() {
+		return remoteDir;
+	}
+	public void setremoteDir(String val) {
+		remoteDir = val;
+	}
+	public String getlocalFile() {
+		return localFile;
+	}
+	public void setlocalFile(String val) {
+		localFile = val;
+	}
+	public String geterrMessage() {
+		return errMessage;
+	}
+	public void seterrMessage(String val) {
+		errMessage = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public GenerateFileHeaderBakFile() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String sftpHost
+	In  : int sftpPort
+	In  : String sftpUser
+	In  : String remoteDir
+	In  : String localFile
+	Out : String errMessage
+* Available Variables: DO NOT MODIFY *****/
+	try {
+		JSch jSchOutHeaderBak = new JSch();
+
+		Session sessionOutHeaderBak = jSchOutHeaderBak.getSession(sftpUser, sftpHost, sftpPort);
+
+		sessionOutHeaderBak.setPassword(com.tibco.pe.plugin.PluginProperties.getProperty("tibco.clientVar.HLIFirmBanking/SFTP/FileActINC/Pass"));
+
+		Properties config = new Properties();
+		config.put("StrictHostKeyChecking","no");
+		sessionOutHeaderBak.setConfig(config);
+
+		sessionOutHeaderBak.connect();
+
+		ChannelSftp channelSftpOutHeaderBak = (ChannelSftp) sessionOutHeaderBak.openChannel("sftp");
+		channelSftpOutHeaderBak.connect();
+		channelSftpOutHeaderBak.put(localFile, remoteDir);
+
+		channelSftpOutHeaderBak.disconnect();
+		sessionOutHeaderBak.disconnect();
+	} catch (Exception ex) {
+		
+		    errMessage = ExceptionUtils.getMessage(ex);
+		}
+	}
+}
+</fullsource>
+            <javaArchive>/SharedResources/Properties/AliasLibrary.aliaslib</javaArchive>
+            <outputData>
+                <row>
+                    <fieldName>errMessage</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>sftpHost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpPort</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>sftpUser</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>remoteDir</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>localFile</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>GenerateFileHeaderBakFile</name>
+                    <byteCode>yv66vgAAADMAdQkAHwBDCQAfAEQJAB8ARQkAHwBGCQAfAEcJAB8ASAoAIABJCABKBwBLCgAJAEkKAAkATAgATQoATgBPCgBQAFEHAFIKAA8ASQgAUwgAVAoADwBVCgBQAFYKAFAAVwgAWAoAUABZBwBaCgAYAFcKABgAWwoAGABcCgBQAFwHAF0KAF4AXwcAYAcAYQEACHNmdHBIb3N0AQASTGphdmEvbGFuZy9TdHJpbmc7AQAIc2Z0cFBvcnQBAAFJAQAIc2Z0cFVzZXIBAAlyZW1vdGVEaXIBAAlsb2NhbEZpbGUBAAplcnJNZXNzYWdlAQALZ2V0c2Z0cEhvc3QBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAAtzZXRzZnRwSG9zdAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAC2dldHNmdHBQb3J0AQADKClJAQALc2V0c2Z0cFBvcnQBAAQoSSlWAQALZ2V0c2Z0cFVzZXIBAAtzZXRzZnRwVXNlcgEADGdldHJlbW90ZURpcgEADHNldHJlbW90ZURpcgEADGdldGxvY2FsRmlsZQEADHNldGxvY2FsRmlsZQEADWdldGVyck1lc3NhZ2UBAA1zZXRlcnJNZXNzYWdlAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQANU3RhY2tNYXBUYWJsZQcAXQEACkV4Y2VwdGlvbnMBAApTb3VyY2VGaWxlAQAeR2VuZXJhdGVGaWxlSGVhZGVyQmFrRmlsZS5qYXZhDAAhACIMACMAJAwAJQAiDAAmACIMACcAIgwAKAAiDAA7ADwBAAABABRjb20vamNyYWZ0L2pzY2gvSlNjaAwAYgBjAQAzdGliY28uY2xpZW50VmFyLkhMSUZpcm1CYW5raW5nL1NGVFAvRmlsZUFjdElOQy9QYXNzBwBkDABlAGYHAGcMAGgALgEAFGphdmEvdXRpbC9Qcm9wZXJ0aWVzAQAVU3RyaWN0SG9zdEtleUNoZWNraW5nAQACbm8MAGkAagwAawBsDABtADwBAARzZnRwDABuAG8BABtjb20vamNyYWZ0L2pzY2gvQ2hhbm5lbFNmdHAMAGkAcAwAcQA8AQATamF2YS9sYW5nL0V4Y2VwdGlvbgcAcgwAcwB0AQBDSW1wbGVtZW50YXRpb24vUHJvY2Vzcy9HZW5lcmF0ZUZpbGVIZWFkZXIvR2VuZXJhdGVGaWxlSGVhZGVyQmFrRmlsZQEAEGphdmEvbGFuZy9PYmplY3QBAApnZXRTZXNzaW9uAQBAKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nO0kpTGNvbS9qY3JhZnQvanNjaC9TZXNzaW9uOwEAJGNvbS90aWJjby9wZS9wbHVnaW4vUGx1Z2luUHJvcGVydGllcwEAC2dldFByb3BlcnR5AQAmKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsBABdjb20vamNyYWZ0L2pzY2gvU2Vzc2lvbgEAC3NldFBhc3N3b3JkAQADcHV0AQA4KExqYXZhL2xhbmcvT2JqZWN0O0xqYXZhL2xhbmcvT2JqZWN0OylMamF2YS9sYW5nL09iamVjdDsBAAlzZXRDb25maWcBABkoTGphdmEvdXRpbC9Qcm9wZXJ0aWVzOylWAQAHY29ubmVjdAEAC29wZW5DaGFubmVsAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMY29tL2pjcmFmdC9qc2NoL0NoYW5uZWw7AQAnKExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylWAQAKZGlzY29ubmVjdAEAMW9yZy9hcGFjaGUvY29tbW9ucy9sYW5nMy9leGNlcHRpb24vRXhjZXB0aW9uVXRpbHMBAApnZXRNZXNzYWdlAQApKExqYXZhL2xhbmcvVGhyb3dhYmxlOylMamF2YS9sYW5nL1N0cmluZzsAIQAfACAAAAAGAAQAIQAiAAAABAAjACQAAAAEACUAIgAAAAQAJgAiAAAABAAnACIAAAAEACgAIgAAAA4AAQApACoAAQArAAAAHQABAAEAAAAFKrQAAbAAAAABACwAAAAGAAEAAAARAAEALQAuAAEAKwAAACIAAgACAAAABiortQABsQAAAAEALAAAAAoAAgAAABQABQAVAAEALwAwAAEAKwAAAB0AAQABAAAABSq0AAKsAAAAAQAsAAAABgABAAAAFwABADEAMgABACsAAAAiAAIAAgAAAAYqG7UAArEAAAABACwAAAAKAAIAAAAaAAUAGwABADMAKgABACsAAAAdAAEAAQAAAAUqtAADsAAAAAEALAAAAAYAAQAAAB0AAQA0AC4AAQArAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAsAAAACgACAAAAIAAFACEAAQA1ACoAAQArAAAAHQABAAEAAAAFKrQABLAAAAABACwAAAAGAAEAAAAjAAEANgAuAAEAKwAAACIAAgACAAAABiortQAEsQAAAAEALAAAAAoAAgAAACYABQAnAAEANwAqAAEAKwAAAB0AAQABAAAABSq0AAWwAAAAAQAsAAAABgABAAAAKQABADgALgABACsAAAAiAAIAAgAAAAYqK7UABbEAAAABACwAAAAKAAIAAAAsAAUALQABADkAKgABACsAAAAdAAEAAQAAAAUqtAAGsAAAAAEALAAAAAYAAQAAAC8AAQA6AC4AAQArAAAAIgACAAIAAAAGKiu1AAaxAAAAAQAsAAAACgACAAAAMgAFADMAAQA7ADwAAQArAAAAXAACAAEAAAAoKrcAByoSCLUAASoDtQACKhIItQADKhIItQAEKhIItQAFKhIItQAGsQAAAAEALAAAACIACAAAADUABAAKAAoACwAPAAwAFQANABsADgAhAA8AJwA2AAEAPQA8AAIAKwAAANoABAAFAAAAb7sACVm3AApMKyq0AAMqtAABKrQAArYAC00sEgy4AA22AA67AA9ZtwAQTi0SERIStgATVywttgAULLYAFSwSFrYAF8AAGDoEGQS2ABkZBCq0AAUqtAAEtgAaGQS2ABsstgAcpwAMTCoruAAetQAGsQABAAAAYgBlAB0AAgAsAAAAQgAQAAAAQQAIAEMAGQBFACIARwAqAEgAMwBJADgASwA8AE0ARwBOAEwATwBZAFEAXgBSAGIAVgBlAFMAZgBVAG4AVwA+AAAACQAC9wBlBwA/CABAAAAABAABAB0AAQBBAAAAAgBC</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <sftpHost>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPBackupHost"/>
+                </sftpHost>
+                <sftpPort>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/SFTPBackupPort"/>
+                </sftpPort>
+                <sftpUser>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActOUT/User"/>
+                </sftpUser>
+                <remoteDir>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/HLIFirmBanking/SFTP/FileActOUT/Dir"/>
+                </remoteDir>
+                <localFile>
+                    <xsl:value-of select="translate($SetHeader/javaCodeActivityOutput/headerFile, '/', '\')"/>
+                </localFile>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>JMSQReceiver</pd:from>
+        <pd:to>SetHeader</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SetHeader</pd:from>
+        <pd:to>PutFile</pd:to>
+        <pd:xpathDescription>Success</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16751104</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>tib:trim($SetHeader/javaCodeActivityOutput/errMessage) = ''</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SetHeader</pd:from>
+        <pd:to>BakFile</pd:to>
+        <pd:xpathDescription>Failed</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-6750055</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogEND</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>LogERR</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogERR</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>PutFile</pd:from>
+        <pd:to>BakFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>BakFile</pd:from>
+        <pd:to>LogEND</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>
